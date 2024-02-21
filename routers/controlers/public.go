@@ -23,12 +23,9 @@ func (PublicControler) PublicAdvertisement(c *gin.Context) {
 
 	models.DB.Offset(offset).
 		Limit(limit).
-		Where("Conditions->'$.gender' = ?", gender).
-		Or("JSON_EXTRACT(Conditions, '$.gender') = """).
-		Where("JSON_CONTAINS(Conditions->'$.country', JSON_ARRAY(?)) = 1", country).
-		Or("JSON_TYPE(Conditions->'$.country') = 'NULL'").
-		Where("JSON_CONTAINS(Conditions->'$.platform', JSON_ARRAY(?)) = 1", platform).
-		Or("JSON_TYPE(Conditions->'$.platform') = 'NULL'").
+		Where(models.DB.Where("Conditions->'$.gender' = ?", gender).Or("JSON_EXTRACT(Conditions, '$.gender') = ''")).
+		Where(models.DB.Where("JSON_CONTAINS(Conditions->'$.country', JSON_ARRAY(?)) = 1", country).Or("JSON_TYPE(Conditions->'$.country') = 'NULL'")).
+		Where(models.DB.Where("JSON_CONTAINS(Conditions->'$.platform', JSON_ARRAY(?)) = 1", platform).Or("JSON_TYPE(Conditions->'$.platform') = 'NULL'")).
 		Where("Conditions->'$.ageStart' <= ? and Conditions->'$.ageEnd' >= ?", age, age).
 		Find(&res)
 
