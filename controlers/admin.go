@@ -2,7 +2,7 @@ package controlers
 
 import (
 	"dcardAssignment/models"
-	
+
 	"encoding/json"
 	"net/http"
 	"time"
@@ -21,13 +21,13 @@ type Body struct {
 		AgeEnd   int      `json:"ageEnd"`
 		Country  []string `json:"country"`
 		Platform []string `json:"platform"`
+		Gender   string   `json:"gender"`
 	} `json:"conditions"`
 }
 
 func (AdminControler) CreateAdvertisement(c *gin.Context) {
 	var body Body
 	if err := c.ShouldBindJSON(&body); err != nil {
-		// 處理錯誤
 		c.JSON(http.StatusBadRequest, gin.H{"Loadin Body failed": err.Error()})
 		return
 	}
@@ -47,9 +47,9 @@ func (AdminControler) CreateAdvertisement(c *gin.Context) {
 
 	res := models.DB.Create(&ad)
 	if res.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Create failed:": err})
+		c.JSON(http.StatusBadRequest, gin.H{"Create failed:": res.Error})
 		return
 	}
 
-	c.JSON(http.StatusOK,gin.H{"Message":"建立成功"})
+	c.JSON(http.StatusOK, gin.H{"Message": "建立成功"})
 }
