@@ -14,7 +14,6 @@ type Advertisement struct {
 	Conditions datatypes.JSON   `gorm:"not null"`
 }
 
-
 func (Advertisement) TableName() string {
 	return "advertisement"
 }

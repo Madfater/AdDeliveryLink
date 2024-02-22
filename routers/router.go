@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"dcardAssignment/routers/controlers"
+	"dcardAssignment/controlers"
 
 	"github.com/gin-gonic/gin"
 )
