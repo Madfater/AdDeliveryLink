@@ -23,12 +23,11 @@ func init() {
 
 	//設定DSN
 	user := cfg.Section("mysql").Key("user").String()
-	password := cfg.Section("mysql").Key("password").String()
 	ip := cfg.Section("mysql").Key("ip").String()
 	port := cfg.Section("mysql").Key("port").String()
 	dbName := "DcardAssignment"
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, password, ip, port, dbName)
+	dsn := fmt.Sprintf("%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, ip, port, dbName)
 
 	//連線資料庫
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})

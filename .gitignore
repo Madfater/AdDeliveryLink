@@ -1,2 +1,4 @@
-/config.ini
 /tmp
+/logs
+/db
+/conf
