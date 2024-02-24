@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/go-ini/ini"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
