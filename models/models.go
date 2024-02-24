@@ -15,28 +15,26 @@ var err error
 
 func init() {
 
-	//讀取配置文件
-	cfg, cfgErr := ini.Load("config.ini")
-	if cfgErr != nil {
-		log.Fatal("Fail to read file: ", cfgErr)
-	}
-
 	//設定DSN
-	user := cfg.Section("mysql").Key("user").String()
-	ip := cfg.Section("mysql").Key("ip").String()
-	port := cfg.Section("mysql").Key("port").String()
+	user := "root"
+	ip := "db"
+	port := "3306"
 	dbName := "DcardAssignment"
 
 	dsn := fmt.Sprintf("%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, ip, port, dbName)
 
 	//連線資料庫
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt: true,
+	})
 	if err != nil {
 		log.Fatal("Fail to connect to database: ", err)
 	}
 }
 
 func CloseDB() {
+
 	db, err := DB.DB()
 	if err != nil {
 		log.Fatal("Fail to get database: ", err)
