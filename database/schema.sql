@@ -27,9 +27,74 @@ CREATE TABLE `advertisement` (
   `Title` varchar(255) NOT NULL,
   `StartAt` datetime NOT NULL,
   `EndAt` datetime NOT NULL,
-  `Conditions` json NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `AgeStart` int DEFAULT NULL,
+  `AgeEnd` int DEFAULT NULL,
+  `Gender` enum('M','F') DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  CONSTRAINT `advertisement_chk_1` CHECK (((`AgeStart` >= 1) and (`AgeStart` <= 100))),
+  CONSTRAINT `advertisement_chk_2` CHECK (((`AgeEnd` >= 1) and (`AgeEnd` <= 100))),
+  CONSTRAINT `chk_gender` CHECK ((`Gender` in (_utf8mb4'M',_utf8mb4'F',NULL)))
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `advertisement_country`
+--
+
+DROP TABLE IF EXISTS `advertisement_country`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `advertisement_country` (
+  `advertisement_id` int NOT NULL,
+  `country_code` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`advertisement_id`,`country_code`),
+  KEY `CountryCode` (`country_code`),
+  CONSTRAINT `advertisement_country_ibfk_1` FOREIGN KEY (`advertisement_id`) REFERENCES `advertisement` (`ID`),
+  CONSTRAINT `advertisement_country_ibfk_2` FOREIGN KEY (`country_code`) REFERENCES `country` (`CountryCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `advertisement_platform`
+--
+
+DROP TABLE IF EXISTS `advertisement_platform`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `advertisement_platform` (
+  `advertisement_id` int NOT NULL,
+  `platform_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`advertisement_id`,`platform_name`),
+  KEY `PlatformName` (`platform_name`),
+  CONSTRAINT `advertisement_platform_ibfk_1` FOREIGN KEY (`advertisement_id`) REFERENCES `advertisement` (`ID`),
+  CONSTRAINT `advertisement_platform_ibfk_2` FOREIGN KEY (`platform_name`) REFERENCES `platform` (`PlatformName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `country`
+--
+
+DROP TABLE IF EXISTS `country`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `country` (
+  `CountryCode` char(2) NOT NULL,
+  PRIMARY KEY (`CountryCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `platform`
+--
+
+DROP TABLE IF EXISTS `platform`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `platform` (
+  `PlatformName` varchar(50) NOT NULL,
+  PRIMARY KEY (`PlatformName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -41,4 +106,4 @@ CREATE TABLE `advertisement` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-22 19:33:47
+-- Dump completed on 2024-02-24 18:25:35

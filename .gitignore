@@ -1,4 +1,2 @@
 /tmp
-/logs
-/db
-/conf
+/dockerVolumes

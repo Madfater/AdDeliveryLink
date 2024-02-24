@@ -10,9 +10,9 @@ services:
   db:
     build: ./database
     volumes:
-      - ./db:/var/lib/mysql
-      - ./conf:/etc/mysql/conf.d
-      - ./logs:/logs
+      - ./dockerVolumes/db:/var/lib/mysql
+      - ./dockerVolumes/conf:/etc/mysql/conf.d
+      - ./dockerVolumes/logs:/logs
     environment:
       MYSQL_DATABASE: DcardAssignment
       MYSQL_ALLOW_EMPTY_PASSWORD: yes
