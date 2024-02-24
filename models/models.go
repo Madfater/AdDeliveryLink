@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -29,6 +30,15 @@ func init() {
 	if err != nil {
 		log.Fatal("Fail to connect to database: ", err)
 	}
+
+	db, err := DB.DB()
+	if err != nil {
+		log.Fatal("Fail to get database: ", err)
+	}
+
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(25)
+	db.SetConnMaxLifetime(5 * time.Minute)
 }
 
 func CloseDB() {
