@@ -9,7 +9,7 @@ on:
 jobs:
   docker:
     timeout-minutes: 10
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
 
     steps:
     - name: Checkout
@@ -23,6 +23,8 @@ jobs:
 
     - name: Run tests
       run: go test ./controlers
+      env:
+        GIN_MODE: release
 
     - name: Stop containers
       if: always()
