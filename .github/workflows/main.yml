@@ -21,6 +21,9 @@ jobs:
     - name: Install go
       uses: actions/setup-go@v4
 
+    - name: Add hosts to /etc/hosts
+      run: sudo echo "127.0.0.1 db" | sudo tee -a /etc/hosts
+
     - name: Run tests
       run: go test ./controlers
       env:
