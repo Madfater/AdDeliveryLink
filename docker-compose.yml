@@ -2,7 +2,7 @@ version: '3'
 services:
   app:
     environment:
-      - GIN_MODE: release
+      GIN_MODE: release
     build: .
     ports:
       - "8080:8080"
