@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -14,18 +15,30 @@ var err error
 
 func init() {
 
-	//設定DSN
-	user := "root"
-	ip := "db"
-	port := "3306"
-	dbName := "DcardAssignment"
+	mode := os.Getenv("GIN_MODE")
+	var user string
+	var ip string
+	var port string
+	var dbName string
+
+	if mode == "release" {
+		user = "root"
+		ip = "db"
+		port = "3306"
+		dbName = "DcardAssignment"
+	} else {
+		user = "DcardAssignment:!Dcard0219"
+		ip = "localhost"
+		port = "3306"
+		dbName = "DcardAssignment"
+	}
 
 	dsn := fmt.Sprintf("%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, ip, port, dbName)
 
 	//連線資料庫
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
-		PrepareStmt: true,
+		PrepareStmt:            true,
 	})
 	if err != nil {
 		log.Fatal("Fail to connect to database: ", err)
