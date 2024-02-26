@@ -17,6 +17,6 @@ services:
       - ./dockerVolumes/logs:/logs
     environment:
       MYSQL_DATABASE: DcardAssignment
-      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
     ports:
       - "3306:3306"
