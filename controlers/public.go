@@ -36,7 +36,7 @@ func (PublicControler) PublicAdvertisement(c *gin.Context) {
 	country := c.Query("country")
 	platform := c.Query("platform")
 
-	//驗證query
+	//驗證query正確性
 	validate := validator.New()
 
 	queryParams := PublicValidator{
@@ -77,6 +77,7 @@ func (PublicControler) PublicAdvertisement(c *gin.Context) {
 
 	var selectResult []Item
 
+	//向資料庫查詢
 	query := models.DB.
 		Model(&models.Advertisement{}).
 		Select("DISTINCT advertisement.Title", "advertisement.EndAt").

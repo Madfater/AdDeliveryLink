@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"dcardAssignment/controlers"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,8 +14,7 @@ import (
 )
 
 func TestCreateAdvertisement(t *testing.T) {
-
-	// 准备测试数据
+	// 準備測試數據
 	body := controlers.Body{
 		Title:   "Test Advertisement",
 		StartAt: time.Now(),
@@ -27,11 +25,10 @@ func TestCreateAdvertisement(t *testing.T) {
 			Gender:   nil,
 		},
 	}
-
 	jsonBody, _ := json.Marshal(body)
 
+	//設定MocK Server
 	r := gin.Default()
-
 	r.POST("/createAdvertisement", controlers.AdminControler{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
@@ -40,8 +37,8 @@ func TestCreateAdvertisement(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
+	//發送請求
 	w := httptest.NewRecorder()
-
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -56,7 +53,7 @@ func TestCreateAdvertisement(t *testing.T) {
 
 
 func TestCreateVaildAdvertisement(t *testing.T) {
-
+	// 準備測試數據
 	gender := "G"
 	body := controlers.Body{
 		Title:   "Test Advertisement",
@@ -70,8 +67,8 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 	}
 	jsonBody, _ := json.Marshal(body)
 
+	//設定MocK Server
 	r := gin.Default()
-
 	r.POST("/createAdvertisement", controlers.AdminControler{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
@@ -80,11 +77,10 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
+	//發送請求
 	w := httptest.NewRecorder()
-
 	r.ServeHTTP(w, req)
 
-	fmt.Println(w.Body)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 
 	var response map[string]interface{}
@@ -96,17 +92,17 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 }
 
 func TestCreateWithEmptyConditions(t *testing.T) {
-
+	// 準備測試數據
 	body := controlers.Body{
 		Title:   "Sample Advertisement",
 		StartAt: time.Now(),
-		EndAt:   time.Now().Add(24 * time.Hour), // 结束时间为当前时间后一天
+		EndAt:   time.Now().Add(24 * time.Hour),
 		Conditions: controlers.Conditions{},
 	}
 	jsonBody, _ := json.Marshal(body)
 
+	//設定MocK Server
 	r := gin.Default()
-
 	r.POST("/createAdvertisement", controlers.AdminControler{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
@@ -115,11 +111,10 @@ func TestCreateWithEmptyConditions(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
+	//發送請求
 	w := httptest.NewRecorder()
-
 	r.ServeHTTP(w, req)
 
-	fmt.Println(w.Body)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	var response map[string]interface{}

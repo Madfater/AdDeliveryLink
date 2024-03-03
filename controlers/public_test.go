@@ -12,9 +12,8 @@ import (
 )
 
 func TestNormalQuery(t *testing.T) {
-
+	//設定Mock Server
 	r := gin.Default()
-	
 	r.GET("/public/advertisement", controlers.PublicControler{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10&age=25&gender=M&country=TW&platform=android"
@@ -25,8 +24,8 @@ func TestNormalQuery(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
+	//對Server發送請求
 	w := httptest.NewRecorder()
-
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -40,9 +39,8 @@ func TestNormalQuery(t *testing.T) {
 }
 
 func TestVaildQuery(t *testing.T) {
-
+	//設定Mock Server
 	r := gin.Default()
-	
 	r.GET("/public/advertisement", controlers.PublicControler{}.PublicAdvertisement)
 
 	query := "offset=0&limit=0&age=25&gender=M&country=TW&platform=android"
@@ -53,8 +51,8 @@ func TestVaildQuery(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
+	//發送請求
 	w := httptest.NewRecorder()
-
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
@@ -68,9 +66,8 @@ func TestVaildQuery(t *testing.T) {
 }
 
 func TestMissingQuery(t *testing.T) {
-
+	//設定Mock Server
 	r := gin.Default()
-	
 	r.GET("/public/advertisement", controlers.PublicControler{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10&age=25&gender=F&country=TW"
@@ -81,8 +78,8 @@ func TestMissingQuery(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
+	//發送請求
 	w := httptest.NewRecorder()
-
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -95,9 +92,8 @@ func TestMissingQuery(t *testing.T) {
 }
 
 func TestEmptyQuery(t *testing.T) {
-
+	//設定Mock Server
 	r := gin.Default()
-	
 	r.GET("/public/advertisement", controlers.PublicControler{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10"
@@ -108,8 +104,8 @@ func TestEmptyQuery(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
+	//發送請求
 	w := httptest.NewRecorder()
-
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
