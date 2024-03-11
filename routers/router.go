@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"dcardAssignment/controlers"
+	"dcardAssignment/controllers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,10 +10,10 @@ func RouterInit(r *gin.Engine) {
 	route:=r.Group("/v1/api")
 	{
 		//Admin API
-		route.POST("/admin", controlers.AdminControler{}.CreateAdvertisement)
+		route.POST("/admin", controllers.AdminController{}.CreateAdvertisement)
 
 		//Public API
-		route.GET("/public", controlers.PublicControler{}.PublicAdvertisement)
+		route.GET("/public", controllers.PublicController{}.PublicAdvertisement)
 	}
 
 }

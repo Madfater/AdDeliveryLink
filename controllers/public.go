@@ -1,4 +1,4 @@
-package controlers
+package controllers
 
 import (
 	"dcardAssignment/models"
@@ -11,7 +11,7 @@ import (
 	"github.com/go-playground/validator"
 )
 
-type PublicControler struct{}
+type PublicController struct{}
 
 type Item struct {
 	Title string    `json:"Title"`
@@ -27,7 +27,7 @@ type PublicValidator struct {
 	Platform string
 }
 
-func (PublicControler) PublicAdvertisement(c *gin.Context) {
+func (PublicController) PublicAdvertisement(c *gin.Context) {
 	//讀取query
 	offset, _ := strconv.Atoi(c.Query("offset"))
 	limit, _ := strconv.Atoi(c.Query("limit"))
@@ -104,6 +104,7 @@ func (PublicControler) PublicAdvertisement(c *gin.Context) {
 		Offset(offset).
 		Limit(limit).
 		Order("endAt asc").
+		Debug().
 		Find(&selectResult)
 
 	if query.Error != nil {

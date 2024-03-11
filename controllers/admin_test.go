@@ -1,8 +1,8 @@
-package controlers_test
+package controllers_test
 
 import (
 	"bytes"
-	"dcardAssignment/controlers"
+	"dcardAssignment/controllers"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -15,11 +15,11 @@ import (
 
 func TestCreateAdvertisement(t *testing.T) {
 	// 準備測試數據
-	body := controlers.Body{
+	body := controllers.Body{
 		Title:   "Test Advertisement",
 		StartAt: time.Now(),
 		EndAt:   time.Now().Add(time.Hour * 24),
-		Conditions: controlers.Conditions{
+		Conditions: controllers.Conditions{
 			Country:  []string{"TW", "JP"},
 			Platform: []string{"ios"},
 			Gender:   nil,
@@ -29,7 +29,7 @@ func TestCreateAdvertisement(t *testing.T) {
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", controlers.AdminControler{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {
@@ -51,15 +51,14 @@ func TestCreateAdvertisement(t *testing.T) {
 	assert.Equal(t, "建立成功", response["Message"])
 }
 
-
 func TestCreateVaildAdvertisement(t *testing.T) {
 	// 準備測試數據
 	gender := "G"
-	body := controlers.Body{
+	body := controllers.Body{
 		Title:   "Test Advertisement",
 		StartAt: time.Now(),
 		EndAt:   time.Now().Add(time.Hour * 24),
-		Conditions: controlers.Conditions{
+		Conditions: controllers.Conditions{
 			Country:  []string{"TW", "JP"},
 			Platform: []string{"ios"},
 			Gender:   &gender,
@@ -69,7 +68,7 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", controlers.AdminControler{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {
@@ -93,17 +92,17 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 
 func TestCreateWithEmptyConditions(t *testing.T) {
 	// 準備測試數據
-	body := controlers.Body{
-		Title:   "Sample Advertisement",
-		StartAt: time.Now(),
-		EndAt:   time.Now().Add(24 * time.Hour),
-		Conditions: controlers.Conditions{},
+	body := controllers.Body{
+		Title:      "Sample Advertisement",
+		StartAt:    time.Now(),
+		EndAt:      time.Now().Add(24 * time.Hour),
+		Conditions: controllers.Conditions{},
 	}
 	jsonBody, _ := json.Marshal(body)
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", controlers.AdminControler{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {

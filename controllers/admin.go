@@ -1,4 +1,4 @@
-package controlers
+package controllers
 
 import (
 	"dcardAssignment/models"
@@ -11,7 +11,7 @@ import (
 	"github.com/go-playground/validator"
 )
 
-type AdminControler struct{}
+type AdminController struct{}
 
 type Body struct {
 	Title      string     `json:"title" validate:"required"`
@@ -28,7 +28,7 @@ type Conditions struct {
 	Gender   *string  `json:"gender" `
 }
 
-func (AdminControler) CreateAdvertisement(c *gin.Context) {
+func (AdminController) CreateAdvertisement(c *gin.Context) {
 
 	var body Body
 

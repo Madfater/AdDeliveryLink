@@ -1,7 +1,7 @@
-package controlers_test
+package controllers_test
 
 import (
-	"dcardAssignment/controlers"
+	controlers "dcardAssignment/controllers"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +14,7 @@ import (
 func TestNormalQuery(t *testing.T) {
 	//設定Mock Server
 	r := gin.Default()
-	r.GET("/public/advertisement", controlers.PublicControler{}.PublicAdvertisement)
+	r.GET("/public/advertisement", controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10&age=25&gender=M&country=TW&platform=android"
 
@@ -35,13 +35,13 @@ func TestNormalQuery(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.NotNil(t,response["items"])
+	assert.NotNil(t, response["items"])
 }
 
 func TestVaildQuery(t *testing.T) {
 	//設定Mock Server
 	r := gin.Default()
-	r.GET("/public/advertisement", controlers.PublicControler{}.PublicAdvertisement)
+	r.GET("/public/advertisement", controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=0&age=25&gender=M&country=TW&platform=android"
 
@@ -62,13 +62,13 @@ func TestVaildQuery(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.NotNil(t,response["Error Message"])
+	assert.NotNil(t, response["Error Message"])
 }
 
 func TestMissingQuery(t *testing.T) {
 	//設定Mock Server
 	r := gin.Default()
-	r.GET("/public/advertisement", controlers.PublicControler{}.PublicAdvertisement)
+	r.GET("/public/advertisement", controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10&age=25&gender=F&country=TW"
 
@@ -88,13 +88,13 @@ func TestMissingQuery(t *testing.T) {
 	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
 		t.Fatal(err)
 	}
-	assert.NotNil(t,response["items"])
+	assert.NotNil(t, response["items"])
 }
 
 func TestEmptyQuery(t *testing.T) {
 	//設定Mock Server
 	r := gin.Default()
-	r.GET("/public/advertisement", controlers.PublicControler{}.PublicAdvertisement)
+	r.GET("/public/advertisement", controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10"
 
@@ -114,6 +114,6 @@ func TestEmptyQuery(t *testing.T) {
 	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
 		t.Fatal(err)
 	}
-	
-	assert.NotNil(t,response["items"])
+
+	assert.NotNil(t, response["items"])
 }
