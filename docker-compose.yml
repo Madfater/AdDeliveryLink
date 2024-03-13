@@ -3,11 +3,16 @@ services:
   app:
     environment:
       GIN_MODE: release
+      MYSQL_USERNAME: root
+      MYSQL_IP: db
+      MYSQL_PORT: 3306
+      MYSQL_Database: DcardAssignment
     build: .
     ports:
       - "8080:8080"
     depends_on:
       - db
+      - redis
     restart: always
   db:
     build: ./database
@@ -20,3 +25,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
     ports:
       - "3306:3306"
+  redis:
+    image: redis:5.0
+    volumes:
+      - ./dockerVolumes/redis_data:/data
