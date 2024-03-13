@@ -40,11 +40,11 @@ func (AdminController) CreateAdvertisement(c *gin.Context) {
 	if body.Conditions.AgeStart == 0 {
 		body.Conditions.AgeStart = 1
 	}
+
 	if body.Conditions.AgeEnd == 0 {
 		body.Conditions.AgeEnd = 100
 	}
 
-	//驗證query
 	validate := validator.New()
 
 	err := validate.Struct(body)
