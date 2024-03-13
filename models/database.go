@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-gorm/caches/v4"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -15,29 +17,23 @@ var err error
 
 func init() {
 
-	//確定環境
-	mode := os.Getenv("GIN_MODE")
-	var user string
-	var ip string
-	var port string
-	var dbName string
+	var user string = os.Getenv("MYSQL_USERNAME")
+	var ip string = os.Getenv("MYSQL_IP")
+	var port string = os.Getenv("MYSQL_PORT")
+	var dbName string = os.Getenv("MYSQL_Database")
 
-	if mode == "release" {
-		user = "root"
-		ip = "db"
-		port = "3306"
-		dbName = "DcardAssignment"
-	} else {
-		user = "DcardAssignment:!Dcard0219"
-		ip = "localhost"
-		port = "3306"
-		dbName = "DcardAssignment"
-	}
+	cachesPlugin := &caches.Caches{Conf: &caches.Config{
+		Cacher: &redisCacher{
+			rdb: redis.NewClient(&redis.Options{
+				Addr:     "redis:6379",
+				Password: "",
+				DB:       0,
+			}),
+		},
+	}}
 
-	//設定DSN
 	dsn := fmt.Sprintf("%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, ip, port, dbName)
 
-	//連線資料庫
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
 		PrepareStmt:            true,
@@ -46,12 +42,13 @@ func init() {
 		log.Fatal("Fail to connect to database: ", err)
 	}
 
+   _ = DB.Use(cachesPlugin)
+
 	db, err := DB.DB()
 	if err != nil {
 		log.Fatal("Fail to get database: ", err)
 	}
 
-	//資料庫設定以提升效能
 	db.SetMaxOpenConns(25)
 	db.SetMaxIdleConns(25)
 	db.SetConnMaxLifetime(5 * time.Minute)
