@@ -78,8 +78,8 @@ func (PublicController) PublicAdvertisement(c *gin.Context) {
 	query := models.DB.
 		Model(&models.Advertisement{}).
 		Select("DISTINCT advertisement.Title", "advertisement.EndAt").
-		Joins("inner join advertisement_country on advertisement.ID = advertisement_country.advertisement_id").
-		Joins("inner join advertisement_platform on advertisement.ID = advertisement_platform.advertisement_id")
+		Joins("left join advertisement_country on advertisement.ID = advertisement_country.advertisement_id").
+		Joins("left join advertisement_platform on advertisement.ID = advertisement_platform.advertisement_id")
 
 	if platform != "" {
 		query.Where(models.DB.Where("advertisement_platform.platform_name = ?", platform).Or("advertisement_platform.platform_name is NULL"))
