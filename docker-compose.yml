@@ -15,7 +15,7 @@ services:
       - redis
     restart: always
   db:
-    build: ./database
+    build: ./schema
     volumes:
       - db-db:/var/lib/mysql
       - db-conf:/etc/mysql/conf.d
