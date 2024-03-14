@@ -1,7 +1,7 @@
 package controllers_test
 
 import (
-	controlers "dcardAssignment/controllers"
+	controlers "dcardAssignment/src/controllers"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"

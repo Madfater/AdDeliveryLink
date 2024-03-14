@@ -2,7 +2,7 @@ package controllers_test
 
 import (
 	"bytes"
-	"dcardAssignment/controllers"
+	"dcardAssignment/src/controllers"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"

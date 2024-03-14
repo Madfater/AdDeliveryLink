@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"dcardAssignment/models"
+	"dcardAssignment/src/models"
 	"fmt"
 
 	"net/http"
