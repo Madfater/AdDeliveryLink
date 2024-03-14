@@ -1,42 +1,44 @@
 name: Test
 
 on:
-  push: 
+  push:
   pull_request:
     branches:
-    - main
+      - main
 
 jobs:
   docker:
     timeout-minutes: 10
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Start containers
-      run: docker compose -f "docker-compose.yml" up -d db redis --build
+      - name: Start containers
+        run: docker compose -f "docker-compose.yml" up -d db redis --build
 
-    - name: Install go
-      uses: actions/setup-go@v4
+      - name: Install go
+        uses: actions/setup-go@v4
 
-    - name: Add hosts to /etc/hosts
-      run: sudo echo "127.0.0.1 db" | sudo tee -a /etc/hosts
-      
-    - name: Add hosts to /etc/hosts
-      run: sudo echo "127.0.0.1 redis" | sudo tee -a /etc/hosts
+      - name: Add hosts to /etc/hosts
+        run: sudo echo "127.0.0.1 db" | sudo tee -a /etc/hosts
 
-    - name: Run tests
-      run: go test -v ./...
-      env:
-        GIN_MODE: release
-        MYSQL_USERNAME: root
-        MYSQL_IP: db
-        MYSQL_PORT: 3306
-        MYSQL_Database: DcardAssignment
+      - name: Add hosts to /etc/hosts
+        run: sudo echo "127.0.0.1 redis" | sudo tee -a /etc/hosts
 
+      - name: Run build
+        run: go build -v ./...
 
-    - name: Stop containers
-      if: always()
-      run: docker-compose -f "docker-compose.yml" down
+      - name: Run tests
+        run: go test -v ./...
+        env:
+          GIN_MODE: release
+          MYSQL_USERNAME: root
+          MYSQL_IP: db
+          MYSQL_PORT: 3306
+          MYSQL_Database: DcardAssignment
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down
