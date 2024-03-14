@@ -16,11 +16,11 @@ import (
 
 func TestCreateAdvertisement(t *testing.T) {
 	// 準備測試數據
-	body := controllers.Body{
+	body := dto.Body{
 		Title:   "Test Advertisement",
 		StartAt: time.Now(),
 		EndAt:   time.Now().Add(time.Hour * 24),
-		Conditions: controllers.Conditions{
+		Conditions: dto.Conditions{
 			Country:  []string{"TW", "JP"},
 			Platform: []string{"ios"},
 			Gender:   nil,
