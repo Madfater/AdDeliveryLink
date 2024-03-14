@@ -17,9 +17,9 @@ services:
   db:
     build: ./database
     volumes:
-      - ./dockerVolumes/db:/var/lib/mysql
-      - ./dockerVolumes/conf:/etc/mysql/conf.d
-      - ./dockerVolumes/logs:/logs
+      - db-db:/var/lib/mysql
+      - db-conf:/etc/mysql/conf.d
+      - db-logs:/logs
     environment:
       MYSQL_DATABASE: DcardAssignment
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
@@ -28,4 +28,11 @@ services:
   redis:
     image: redis:5.0
     volumes:
-      - ./dockerVolumes/redis_data:/data
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+volumes:
+  redis-data:
+  db-db:
+  db-conf:
+  db-logs:

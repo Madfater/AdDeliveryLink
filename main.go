@@ -1,8 +1,8 @@
 package main
 
 import (
-	"dcardAssignment/models"
-	"dcardAssignment/routers"
+	"dcardAssignment/src/models"
+	"dcardAssignment/src/routers"
 
 	"github.com/gin-gonic/gin"
 )
