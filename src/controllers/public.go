@@ -13,8 +13,8 @@ type PublicController struct{}
 func (PublicController) PublicAdvertisement(c *gin.Context) {
 
 	var query dto.Query
-	err := c.BindQuery(&query)
-	if err != nil {
+
+	if err := c.ShouldBindQuery(&query); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Message": err})
 	}
 
