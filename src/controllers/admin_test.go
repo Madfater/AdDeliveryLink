@@ -3,6 +3,7 @@ package controllers_test
 import (
 	"bytes"
 	"dcardAssignment/src/controllers"
+	"dcardAssignment/src/dto"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -54,11 +55,11 @@ func TestCreateAdvertisement(t *testing.T) {
 func TestCreateVaildAdvertisement(t *testing.T) {
 	// 準備測試數據
 	gender := "G"
-	body := controllers.Body{
+	body := dto.Body{
 		Title:   "Test Advertisement",
 		StartAt: time.Now(),
 		EndAt:   time.Now().Add(time.Hour * 24),
-		Conditions: controllers.Conditions{
+		Conditions: dto.Conditions{
 			Country:  []string{"TW", "JP"},
 			Platform: []string{"ios"},
 			Gender:   &gender,
@@ -92,11 +93,11 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 
 func TestCreateWithEmptyConditions(t *testing.T) {
 	// 準備測試數據
-	body := controllers.Body{
+	body := dto.Body{
 		Title:      "Sample Advertisement",
 		StartAt:    time.Now(),
 		EndAt:      time.Now().Add(24 * time.Hour),
-		Conditions: controllers.Conditions{},
+		Conditions: dto.Conditions{},
 	}
 	jsonBody, _ := json.Marshal(body)
 
