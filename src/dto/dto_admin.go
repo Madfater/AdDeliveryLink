@@ -10,9 +10,9 @@ type Body struct {
 }
 
 type Conditions struct {
-	AgeStart int      `json:"ageStart" validate:"min=1,max=100"`
-	AgeEnd   int      `json:"ageEnd" validate:"min=1,max=100"`
-	Country  []string `json:"country"`
-	Platform []string `json:"platform"`
-	Gender   *string  `json:"gender" `
+	AgeStart *int     `json:"ageStart" validate:"omitempty,gte=1,lte=100"`
+	AgeEnd   *int     `json:"ageEnd" validate:"omitempty,gte=1,lte=100"`
+	Country  []string `json:"country" validate:"omitempty,dive,country_code"`
+	Platform []string `json:"platform" validate:"omitempty,dive,oneof=ios android web"`
+	Gender   *string   `json:"gender" validate:"omitempty,oneof=M F"`
 }
