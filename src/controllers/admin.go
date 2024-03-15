@@ -43,7 +43,7 @@ func (AdminController) CreateAdvertisement(c *gin.Context) {
 		Platform: convertToPlatforms(body.Conditions.Platform),
 	}
 
-	res := models.DB.Debug().Create(&ad)
+	res := models.DB.Create(&ad)
 	if res.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Create failed:": res.Error})
 		return

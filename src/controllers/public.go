@@ -57,7 +57,6 @@ func (PublicController) PublicAdvertisement(c *gin.Context) {
 		Offset(*query.Offset).
 		Limit(*query.Limit).
 		Order("endAt asc").
-		Debug().
 		Find(&selectResult)
 
 	if sqlQuery.Error != nil {
