@@ -23,7 +23,6 @@ func TestCreateAdvertisement(t *testing.T) {
 		Conditions: dto.Conditions{
 			Country:  []string{"TW", "JP"},
 			Platform: []string{"ios"},
-			Gender:   nil,
 		},
 	}
 	jsonBody, _ := json.Marshal(body)
@@ -53,8 +52,8 @@ func TestCreateAdvertisement(t *testing.T) {
 }
 
 func TestCreateVaildAdvertisement(t *testing.T) {
+	g:="G"
 	// 準備測試數據
-	gender := "G"
 	body := dto.Body{
 		Title:   "Test Advertisement",
 		StartAt: time.Now(),
@@ -62,7 +61,7 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 		Conditions: dto.Conditions{
 			Country:  []string{"TW", "JP"},
 			Platform: []string{"ios"},
-			Gender:   &gender,
+			Gender:   &g,
 		},
 	}
 	jsonBody, _ := json.Marshal(body)

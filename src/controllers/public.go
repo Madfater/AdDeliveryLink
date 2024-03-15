@@ -18,6 +18,17 @@ func (PublicController) PublicAdvertisement(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Message": err})
 	}
 
+	var defaultLimitValue int = 5
+	var defaultOffsetValue int = 0
+
+	if query.Limit == nil {
+		query.Limit = &defaultLimitValue
+	}
+
+	if query.Offset == nil {
+		query.Offset = &defaultOffsetValue
+	}
+
 	var selectResult []dto.Response
 
 	sqlQuery := models.DB.
@@ -38,14 +49,15 @@ func (PublicController) PublicAdvertisement(c *gin.Context) {
 		sqlQuery.Where(models.DB.Where("advertisement.Gender = ?", query.Gender).Or("advertisement.Gender is NULL"))
 	}
 
-	if query.Age != 0 {
+	if query.Age != nil {
 		sqlQuery.Where("advertisement.AgeStart <= ? AND advertisement.AgeEnd >= ?", query.Age, query.Age)
 	}
 
 	sqlQuery.
-		Offset(query.Offset).
-		Limit(query.Limit).
+		Offset(*query.Offset).
+		Limit(*query.Limit).
 		Order("endAt asc").
+		Debug().
 		Find(&selectResult)
 
 	if sqlQuery.Error != nil {
