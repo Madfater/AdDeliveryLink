@@ -4,6 +4,7 @@ import (
 	"dcardAssignment/src/dto"
 	"dcardAssignment/src/models"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -52,6 +53,10 @@ func (PublicController) PublicAdvertisement(c *gin.Context) {
 	if query.Age != nil {
 		sqlQuery.Where("advertisement.AgeStart <= ? AND advertisement.AgeEnd >= ?", query.Age, query.Age)
 	}
+
+	currentTime := time.Now()
+  roundedTime := currentTime.Truncate(time.Hour)
+	sqlQuery.Where("advertisement.StartAt <= ? AND advertisement.EndAt >= ?", roundedTime, roundedTime)
 
 	sqlQuery.
 		Offset(*query.Offset).
