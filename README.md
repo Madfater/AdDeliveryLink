@@ -29,6 +29,8 @@ public API：用於根據特定條件列出符合條件的廣告。
 	<img src="./img/schema.png">
 	<img src="./img/ER_model.png">
 </div> 
+ 
+-	對ID、AgeEnd、AgeStart、Gender設置index提高搜尋速度
 
 ## 技術選擇
 
@@ -44,7 +46,7 @@ public API：用於根據特定條件列出符合條件的廣告。
 - [go-gorm/cache](https://github.com/go-gorm/caches)
 - [Validator](https://github.com/go-playground/validator)
 
-### 技術選擇
+### 使用原因
 
 - Validator：它是用來驗證輸入的Library。僅需要在struct中設定好限制就能方便的驗出錯誤。
 - go-redis：redis的客戶端。
@@ -57,5 +59,5 @@ public API：用於根據特定條件列出符合條件的廣告。
 3. 執行以下命令來啟動容器：
 
 ```bash
-docker-compose up
+docker compose up --build
 ```
