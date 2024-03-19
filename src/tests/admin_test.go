@@ -1,9 +1,10 @@
-package controllers_test
+package test
 
 import (
 	"bytes"
 	"dcardAssignment/src/controllers"
 	"dcardAssignment/src/dto"
+	"dcardAssignment/src/middleware"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -29,7 +30,7 @@ func TestCreateAdvertisement(t *testing.T) {
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", controllers.AdminController{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", middleware.AdminMiddleware{}.AdminBodyValidator, controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {
@@ -52,7 +53,7 @@ func TestCreateAdvertisement(t *testing.T) {
 }
 
 func TestCreateVaildAdvertisement(t *testing.T) {
-	g:="G"
+	g := "G"
 	// 準備測試數據
 	body := dto.Body{
 		Title:   "Test Advertisement",
@@ -68,7 +69,7 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", controllers.AdminController{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", middleware.AdminMiddleware{}.AdminBodyValidator, controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {
@@ -102,7 +103,7 @@ func TestCreateWithEmptyConditions(t *testing.T) {
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", controllers.AdminController{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", middleware.AdminMiddleware{}.AdminBodyValidator, controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {

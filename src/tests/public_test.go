@@ -1,7 +1,8 @@
-package controllers_test
+package test
 
 import (
 	controlers "dcardAssignment/src/controllers"
+	"dcardAssignment/src/middleware"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +15,7 @@ import (
 func TestNormalQuery(t *testing.T) {
 	//設定Mock Server
 	r := gin.Default()
-	r.GET("/public/advertisement", controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10&age=25&gender=M&country=TW&platform=android"
 
@@ -41,7 +42,7 @@ func TestNormalQuery(t *testing.T) {
 func TestVaildQuery(t *testing.T) {
 	//設定Mock Server
 	r := gin.Default()
-	r.GET("/public/advertisement", controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=0&age=25&gender=M&country=TW&platform=android"
 
@@ -68,7 +69,7 @@ func TestVaildQuery(t *testing.T) {
 func TestMissingQuery(t *testing.T) {
 	//設定Mock Server
 	r := gin.Default()
-	r.GET("/public/advertisement", controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10&age=25&gender=F&country=TW"
 
@@ -94,7 +95,7 @@ func TestMissingQuery(t *testing.T) {
 func TestEmptyQuery(t *testing.T) {
 	//設定Mock Server
 	r := gin.Default()
-	r.GET("/public/advertisement", controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10"
 
