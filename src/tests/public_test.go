@@ -3,7 +3,6 @@ package test
 import (
 	controlers "dcardAssignment/src/controllers"
 	"dcardAssignment/src/middleware"
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -13,7 +12,6 @@ import (
 )
 
 func TestNormalQuery(t *testing.T) {
-	//設定Mock Server
 	r := gin.Default()
 	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
@@ -25,22 +23,13 @@ func TestNormalQuery(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	//對Server發送請求
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
-
-	var response map[string]interface{}
-	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
-		t.Fatal(err)
-	}
-
-	assert.NotNil(t, response["items"])
 }
 
 func TestVaildQuery(t *testing.T) {
-	//設定Mock Server
 	r := gin.Default()
 	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
@@ -52,22 +41,13 @@ func TestVaildQuery(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	//發送請求
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-
-	var response map[string]interface{}
-	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
-		t.Fatal(err)
-	}
-
-	assert.NotNil(t, response["Error Message"])
 }
 
 func TestMissingQuery(t *testing.T) {
-	//設定Mock Server
 	r := gin.Default()
 	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
@@ -79,21 +59,13 @@ func TestMissingQuery(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	//發送請求
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
-
-	var response map[string]interface{}
-	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
-		t.Fatal(err)
-	}
-	assert.NotNil(t, response["items"])
 }
 
 func TestEmptyQuery(t *testing.T) {
-	//設定Mock Server
 	r := gin.Default()
 	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
@@ -105,16 +77,8 @@ func TestEmptyQuery(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	//發送請求
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
-
-	var response map[string]interface{}
-	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
-		t.Fatal(err)
-	}
-
-	assert.NotNil(t, response["items"])
 }

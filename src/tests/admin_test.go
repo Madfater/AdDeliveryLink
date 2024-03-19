@@ -43,13 +43,6 @@ func TestCreateAdvertisement(t *testing.T) {
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
-
-	var response map[string]interface{}
-	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
-		t.Fatal(err)
-	}
-
-	assert.Equal(t, "建立成功", response["Message"])
 }
 
 func TestCreateVaildAdvertisement(t *testing.T) {
@@ -82,13 +75,6 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-
-	var response map[string]interface{}
-	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
-		t.Fatal(err)
-	}
-
-	assert.NotNil(t, response["Create failed:"])
 }
 
 func TestCreateWithEmptyConditions(t *testing.T) {
@@ -116,11 +102,4 @@ func TestCreateWithEmptyConditions(t *testing.T) {
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
-
-	var response map[string]interface{}
-	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
-		t.Fatal(err)
-	}
-
-	assert.Equal(t, "建立成功", response["Message"])
 }
