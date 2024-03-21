@@ -70,7 +70,7 @@ public API：用於根據特定條件列出符合條件的廣告。
 
 - 以下測試結果為使用Jmeter進行測試
 - 測試方式為10分鐘的負載測試
-- [Jmeter的詳細測試報告](./jmeter/index.html)
+- [Jmeter的詳細測試報告](./jmeter/)
 
 <div align=center>
 	<h3>測資</h3>
