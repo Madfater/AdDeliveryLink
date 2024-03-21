@@ -7,10 +7,9 @@ on:
       - main
 
 jobs:
-  docker:
+  test:
     timeout-minutes: 10
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,3 +41,11 @@ jobs:
       - name: Stop containers
         if: always()
         run: docker-compose -f "docker-compose.yml" down
+  build:
+    needs: 
+      - test
+    uses: ./.github/workflows/docker-image.yml
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
