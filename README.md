@@ -46,12 +46,14 @@ public API：用於根據特定條件列出符合條件的廣告。
 - [Gorm](https://gorm.io/)
 - [go-gorm/cache](https://github.com/go-gorm/caches)
 - [Validator](https://github.com/go-playground/validator)
+- [gin-swagger](https://github.com/swaggo/gin-swagger)
 
 ### 使用原因
 
 - Validator：它是用來驗證輸入的Library。僅需要在struct中設定好限制就能方便的驗出錯誤。
 - go-redis：redis的客戶端。
 - go-gorm/cache：Gorm的Plugin，只需實作Get、Store及Invalidate，就能讓Gorm自行處裡Memory cache的邏輯。能使用上者實作，讓其變成使用redis作為快取伺服器。
+- gin-swagger: API文檔自動生成
 
 ## 流量測試
 
@@ -90,3 +92,5 @@ public API：用於根據特定條件列出符合條件的廣告。
 ```bash
 docker compose up --build
 ```
+
+4. /swagger/index.html 觀看API文檔
