@@ -1,4 +1,4 @@
-name: Create and publish a Docker image
+name: Create and publish a app Docker image
 
 on:
   workflow_call:
@@ -32,23 +32,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/app
 
       - name: Build and push app Docker image
         uses: docker/build-push-action@v5
         with:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: app
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push SQL Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./schema
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: db
           cache-from: type=gha
           cache-to: type=gha,mode=max

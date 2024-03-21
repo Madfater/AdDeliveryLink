@@ -41,11 +41,19 @@ jobs:
       - name: Stop containers
         if: always()
         run: docker-compose -f "docker-compose.yml" down
-  build:
+  build-app:
     needs: 
       - test
-    uses: ./.github/workflows/docker-image.yml
+    uses: ./.github/workflows/app-docker-image.yml
     secrets: inherit
     permissions:
       contents: read
       packages: write
+  build-db:
+        needs: 
+          - test
+        uses: ./.github/workflows/db-docker-image.yml
+        secrets: inherit
+        permissions:
+          contents: read
+          packages: write
