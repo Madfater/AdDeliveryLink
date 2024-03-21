@@ -85,12 +85,64 @@ public API：用於根據特定條件列出符合條件的廣告。
 
 ## 運行專案
 
+### 方法1 : clone專案
+
 1. 確保你已經在本地環境中安裝了 Docker 和 Docker Compose。
-2. 在終端中切換到你的專案目錄。
+2. 確保你已經clone了專案並在終端中切換到專案目錄。
 3. 執行以下命令來啟動容器：
 
 ```bash
 docker compose up --build
 ```
 
-4. /swagger/index.html 觀看API文檔
+4. /swagger/index.html 觀看API文檔，確保正確啟動
+
+### 方法2 : 使用docker image
+
+```yml
+version: '3'
+services:
+  app:
+		image: ghcr.io/madfater/app:main
+    environment:
+      GIN_MODE: release
+      MYSQL_USERNAME: root
+      MYSQL_IP: db
+      MYSQL_PORT: 3306
+      MYSQL_Database: DcardAssignment
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - redis
+    restart: always
+  db:
+    image: ghcr.io/madfater/db:main
+    volumes:
+      - db-db:/var/lib/mysql
+      - db-conf:/etc/mysql/conf.d
+      - db-logs:/logs
+    environment:
+      MYSQL_DATABASE: DcardAssignment
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    ports:
+      - "3306:3306"
+  redis:
+    image: redis:5.0
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+volumes:
+  redis-data:
+  db-db:
+  db-conf:
+  db-logs:
+```
+1. 確保你已經在本地環境中安裝了 Docker 和 Docker Compose。
+2. 確保你已經複製上方的Docker Compose到本地
+3. 執行以下命令來啟動容器：
+
+```bash
+docker compose up
+```
