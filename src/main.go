@@ -9,6 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @title Advertisement API
+// @version 1.0
+// @description a simple API for advertisement
+
+// @BasePath /v1/api
 func main() {
 
 	defer models.CloseDB()

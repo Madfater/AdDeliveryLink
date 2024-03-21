@@ -1,0 +1,120 @@
+basePath: /v1/api
+definitions:
+  dto.Body:
+    properties:
+      conditions:
+        $ref: '#/definitions/dto.Conditions'
+      endAt:
+        type: string
+      startAt:
+        type: string
+      title:
+        type: string
+    required:
+    - conditions
+    - endAt
+    - startAt
+    - title
+    type: object
+  dto.Conditions:
+    properties:
+      ageEnd:
+        maximum: 100
+        minimum: 1
+        type: integer
+      ageStart:
+        maximum: 100
+        minimum: 1
+        type: integer
+      country:
+        items:
+          type: string
+        type: array
+      gender:
+        enum:
+        - M
+        - F
+        type: string
+      platform:
+        items:
+          type: string
+        type: array
+    type: object
+  dto.Response:
+    properties:
+      EndAt:
+        type: string
+      Title:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: a simple API for advertisement
+  title: Advertisement API
+  version: "1.0"
+paths:
+  /ad:
+    get:
+      description: Gets a list of advertisements that match the specified conditions.
+      parameters:
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: age
+        type: integer
+      - in: query
+        name: country
+        type: string
+      - enum:
+        - F
+        - M
+        in: query
+        name: gender
+        type: string
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - in: query
+        minimum: 0
+        name: offset
+        type: integer
+      - enum:
+        - ios
+        - android
+        - web
+        in: query
+        name: platform
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.Response'
+            type: array
+        "400":
+          description: Bad Request
+      summary: Gets a list of advertisements
+      tags:
+      - Advertisement
+    post:
+      description: Creates a new advertisement with the specified title, start and
+        end dates, and conditions.
+      parameters:
+      - description: Advertisement information
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Body'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      summary: Creates a new advertisement
+      tags:
+      - Advertisement
+swagger: "2.0"

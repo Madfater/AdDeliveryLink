@@ -11,6 +11,13 @@ import (
 
 type PublicController struct{}
 
+// @Summary Gets a list of advertisements
+// @Description Gets a list of advertisements that match the specified conditions.
+// @Param query query dto.Query true "Advertisement query parameters"
+// @Tags Advertisement
+// @Success 200 {object} []dto.Response
+// @Failure 400
+// @Router /ad [get]
 func (PublicController) PublicAdvertisement(c *gin.Context) {
 
 	var query dto.Query

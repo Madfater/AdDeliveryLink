@@ -12,11 +12,19 @@ import (
 
 type AdminController struct{}
 
+
+// @Summary Creates a new advertisement
+// @Description Creates a new advertisement with the specified title, start and end dates, and conditions.
+// @Param body body dto.Body true "Advertisement information"
+// @Tags Advertisement
+// @Success 200
+// @Failure 400
+// @Router /ad [post]
 func (AdminController) CreateAdvertisement(c *gin.Context) {
 
 	var body dto.Body
 
-	if err := c.ShouldBindBodyWith(&body,binding.JSON); err != nil {
+	if err := c.ShouldBindBodyWith(&body, binding.JSON); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Loading Body failed": err.Error()})
 		return
 	}
