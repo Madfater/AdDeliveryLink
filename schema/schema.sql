@@ -18,7 +18,28 @@ CREATE TABLE `advertisement` (
   CONSTRAINT `chk_gender` CHECK ((`Gender` in (_utf8mb4'M',_utf8mb4'F',NULL)))
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+DROP TABLE IF EXISTS `country`;
+
+CREATE TABLE `country`
+(
+    `CountryCode` char(2) NOT NULL,
+    PRIMARY KEY (`CountryCode`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `platform`;
+
+CREATE TABLE `platform`
+(
+    `PlatformName` varchar(50) NOT NULL,
+    PRIMARY KEY (`PlatformName`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
+
 DROP TABLE IF EXISTS `advertisement_country`;
+
 CREATE TABLE `advertisement_country` (
   `advertisement_id` int NOT NULL,
   `country_code` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
@@ -37,18 +58,4 @@ CREATE TABLE `advertisement_platform` (
   KEY `PlatformName` (`platform_name`),
   CONSTRAINT `advertisement_platform_ibfk_1` FOREIGN KEY (`advertisement_id`) REFERENCES `advertisement` (`ID`),
   CONSTRAINT `advertisement_platform_ibfk_2` FOREIGN KEY (`platform_name`) REFERENCES `platform` (`PlatformName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-DROP TABLE IF EXISTS `country`;
-
-CREATE TABLE `country` (
-  `CountryCode` char(2) NOT NULL,
-  PRIMARY KEY (`CountryCode`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-DROP TABLE IF EXISTS `platform`;
-
-CREATE TABLE `platform` (
-  `PlatformName` varchar(50) NOT NULL,
-  PRIMARY KEY (`PlatformName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

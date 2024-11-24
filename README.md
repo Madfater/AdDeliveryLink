@@ -74,7 +74,7 @@ public API：用於根據特定條件列出符合條件的廣告
 
 - 以下測試結果為使用 Jmeter 進行測試
 - 測試方式為 10 分鐘的負載測試
-- [Jmeter 的詳細測試報告](https://madfater.github.io/AdDeliveryLink/jmeter/index.html)
+- [Jmeter 的詳細測試報告](https://madfater.github.io/AdDeliveryLink/)
 
 <div align=center>
 	<h3>測資</h3>
