@@ -1,8 +1,8 @@
 package test
 
 import (
-	controlers "github.com/Madfater/AdDeliveryLink/src/controllers"
-	"github.com/Madfater/AdDeliveryLink/src/middleware"
+	controlers "github.com/Madfater/AdDeliveryLink/controllers"
+	"github.com/Madfater/AdDeliveryLink/middleware"
 	"net/http"
 	"net/http/httptest"
 	"testing"

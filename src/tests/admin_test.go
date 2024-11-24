@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Madfater/AdDeliveryLink/src/controllers"
-	"github.com/Madfater/AdDeliveryLink/src/dto"
-	"github.com/Madfater/AdDeliveryLink/src/middleware"
+	"github.com/Madfater/AdDeliveryLink/controllers"
+	"github.com/Madfater/AdDeliveryLink/dto"
+	"github.com/Madfater/AdDeliveryLink/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )

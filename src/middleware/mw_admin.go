@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/Madfater/AdDeliveryLink/src/dto"
+	"github.com/Madfater/AdDeliveryLink/dto"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

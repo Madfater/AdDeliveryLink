@@ -1,9 +1,9 @@
 package routers
 
 import (
+	"github.com/Madfater/AdDeliveryLink/controllers"
 	_ "github.com/Madfater/AdDeliveryLink/docs"
-	"github.com/Madfater/AdDeliveryLink/src/controllers"
-	"github.com/Madfater/AdDeliveryLink/src/middleware"
+	"github.com/Madfater/AdDeliveryLink/middleware"
 
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"

@@ -2,7 +2,9 @@ package cache
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/go-gorm/caches/v4"
@@ -14,8 +16,10 @@ type RedisCache struct {
 }
 
 func (r *RedisCache) GetCachePlugin() *caches.Caches {
+	ip := os.Getenv("REDIS_IP")
+
 	r.rdb = redis.NewClient(&redis.Options{
-		Addr:     "redis:6379",
+		Addr:     ip + ":6379",
 		Password: "",
 		DB:       0,
 	})
@@ -29,7 +33,7 @@ func (r *RedisCache) GetCachePlugin() *caches.Caches {
 
 func (r *RedisCache) Get(ctx context.Context, key string, q *caches.Query[any]) (*caches.Query[any], error) {
 	res, err := r.rdb.Get(ctx, key).Result()
-	if err == redis.Nil {
+	if errors.Is(err, redis.Nil) {
 		return nil, nil
 	}
 

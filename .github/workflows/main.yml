@@ -36,7 +36,7 @@ jobs:
           MYSQL_USERNAME: root
           MYSQL_IP: db
           MYSQL_PORT: 3306
-          MYSQL_Database: DcardAssignment
+          MYSQL_Database: AdDeliveryLink
 
       - name: Stop containers
         if: always()

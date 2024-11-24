@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/Madfater/AdDeliveryLink/src/models"
-	"github.com/Madfater/AdDeliveryLink/src/routers"
+	"github.com/Madfater/AdDeliveryLink/models"
+	"github.com/Madfater/AdDeliveryLink/routers"
+	"github.com/Madfater/AdDeliveryLink/utils"
 	"io"
 	"os"
 
@@ -28,5 +29,6 @@ func main() {
 
 	routers.RouterInit(r)
 
-	r.Run(":8080")
+	err := r.Run(":8080")
+	utils.HandleError(err, "Fail to run server")
 }

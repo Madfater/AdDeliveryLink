@@ -1,35 +1,44 @@
-version: '3'
+version: '3.9'
 services:
   app:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
     environment:
+      GIN_MODE: release
       MYSQL_USERNAME: root
       MYSQL_IP: db
       MYSQL_PORT: 3306
       MYSQL_DATABASE: AdDeliveryLink
-    build: .
+      REDIS_IP: redis
     ports:
       - "8080:8080"
     depends_on:
       - db
       - redis
     restart: always
+
   db:
-    build: ./schema
-    volumes:
-      - db-db:/var/lib/mysql
-      - db-conf:/etc/mysql/conf.d
-      - db-logs:/logs
+    build:
+      context: ./schema
+      dockerfile: Dockerfile
     environment:
       MYSQL_DATABASE: AdDeliveryLink
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
     ports:
       - "3306:3306"
+    volumes:
+      - db-db:/var/lib/mysql
+      - db-conf:/etc/mysql/conf.d
+      - db-logs:/logs
+
   redis:
-    image: redis:5.0
+    image: redis:alpine
     volumes:
       - redis-data:/data
     ports:
       - "6379:6379"
+
 volumes:
   redis-data:
   db-db:

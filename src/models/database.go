@@ -1,9 +1,9 @@
 package models
 
 import (
-	"github.com/Madfater/AdDeliveryLink/src/models/cache"
-	"github.com/Madfater/AdDeliveryLink/src/models/database"
-	"github.com/Madfater/AdDeliveryLink/src/utils"
+	"github.com/Madfater/AdDeliveryLink/models/cache"
+	"github.com/Madfater/AdDeliveryLink/models/database"
+	"github.com/Madfater/AdDeliveryLink/utils"
 	"gorm.io/gorm"
 )
 

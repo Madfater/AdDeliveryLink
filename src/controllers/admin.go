@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"github.com/Madfater/AdDeliveryLink/src/dto"
-	"github.com/Madfater/AdDeliveryLink/src/models"
+	"github.com/Madfater/AdDeliveryLink/dto"
+	"github.com/Madfater/AdDeliveryLink/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
