@@ -113,7 +113,7 @@ docker compose up
 4. /swagger/index.html 觀看 API 文檔，確保正確啟動
 
 ```yml
-version: "3"
+version: '3.9'
 services:
   app:
     image: ghcr.io/madfater/app:main
@@ -122,33 +122,36 @@ services:
       MYSQL_USERNAME: root
       MYSQL_IP: db
       MYSQL_PORT: 3306
-      MYSQL_Database: DcardAssignment
+      MYSQL_DATABASE: AdDeliveryLink
+      REDIS_IP: redis
     ports:
       - "8080:8080"
     depends_on:
       - db
       - redis
     restart: always
+
   db:
     image: ghcr.io/madfater/db:main
+    environment:
+      MYSQL_DATABASE: AdDeliveryLink
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    ports:
+      - "3306:3306"
     volumes:
       - db-db:/var/lib/mysql
       - db-conf:/etc/mysql/conf.d
       - db-logs:/logs
-    environment:
-      MYSQL_DATABASE: DcardAssignment
-      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-    ports:
-      - "3306:3306"
+
   redis:
-    image: redis:5.0
+    image: redis:alpine
     volumes:
       - redis-data:/data
     ports:
       - "6379:6379"
+
 volumes:
   redis-data:
   db-db:
   db-conf:
   db-logs:
-```
