@@ -31,6 +31,7 @@ func (Advertisement) TableName() string {
 func (Country) TableName() string {
 	return "country"
 }
+
 func (Platform) TableName() string {
 	return "platform"
 }
