@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"dcardAssignment/src/dto"
-	"dcardAssignment/src/models"
+	"github.com/Madfater/AdDeliveryLink/src/dto"
+	"github.com/Madfater/AdDeliveryLink/src/models"
 	"net/http"
 	"time"
 
@@ -62,7 +62,7 @@ func (PublicController) PublicAdvertisement(c *gin.Context) {
 	}
 
 	currentTime := time.Now()
-  roundedTime := currentTime.Truncate(time.Hour)
+	roundedTime := currentTime.Truncate(time.Hour)
 	sqlQuery.Where("advertisement.StartAt <= ? AND advertisement.EndAt >= ?", roundedTime, roundedTime)
 
 	sqlQuery.

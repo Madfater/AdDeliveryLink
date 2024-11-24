@@ -1,9 +1,9 @@
 package routers
 
 import (
-	"dcardAssignment/src/controllers"
-	"dcardAssignment/src/middleware"
-	_ "dcardAssignment/docs"
+	_ "github.com/Madfater/AdDeliveryLink/docs"
+	"github.com/Madfater/AdDeliveryLink/src/controllers"
+	"github.com/Madfater/AdDeliveryLink/src/middleware"
 
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"

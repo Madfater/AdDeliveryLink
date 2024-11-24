@@ -1,8 +1,8 @@
 package test
 
 import (
-	controlers "dcardAssignment/src/controllers"
-	"dcardAssignment/src/middleware"
+	controlers "github.com/Madfater/AdDeliveryLink/src/controllers"
+	"github.com/Madfater/AdDeliveryLink/src/middleware"
 	"net/http"
 	"net/http/httptest"
 	"testing"

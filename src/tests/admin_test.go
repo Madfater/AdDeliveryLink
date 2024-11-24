@@ -2,15 +2,15 @@ package test
 
 import (
 	"bytes"
-	"dcardAssignment/src/controllers"
-	"dcardAssignment/src/dto"
-	"dcardAssignment/src/middleware"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
 
+	"github.com/Madfater/AdDeliveryLink/src/controllers"
+	"github.com/Madfater/AdDeliveryLink/src/dto"
+	"github.com/Madfater/AdDeliveryLink/src/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )

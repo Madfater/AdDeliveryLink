@@ -1,8 +1,7 @@
 package middleware
 
 import (
-	"dcardAssignment/src/dto"
-
+	"github.com/Madfater/AdDeliveryLink/src/dto"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +22,7 @@ func (PublicMiddleware) PublicQueryValidator(c *gin.Context) {
 	validate := validator.New()
 
 	if err := validate.Struct(&query); err != nil {
-		
+
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})

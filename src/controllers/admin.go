@@ -1,9 +1,8 @@
 package controllers
 
 import (
-	"dcardAssignment/src/dto"
-	"dcardAssignment/src/models"
-
+	"github.com/Madfater/AdDeliveryLink/src/dto"
+	"github.com/Madfater/AdDeliveryLink/src/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +10,6 @@ import (
 )
 
 type AdminController struct{}
-
 
 // @Summary Creates a new advertisement
 // @Description Creates a new advertisement with the specified title, start and end dates, and conditions.

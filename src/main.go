@@ -1,8 +1,8 @@
 package main
 
 import (
-	"dcardAssignment/src/models"
-	"dcardAssignment/src/routers"
+	"github.com/Madfater/AdDeliveryLink/src/models"
+	"github.com/Madfater/AdDeliveryLink/src/routers"
 	"io"
 	"os"
 
@@ -21,7 +21,7 @@ func main() {
 	gin.DisableConsoleColor()
 
 	f, _ := os.Create("gin.log")
-	
+
 	r := gin.New()
 	r.Use(gin.RecoveryWithWriter(io.MultiWriter(f)))
 	r.Use(gin.LoggerWithWriter(io.MultiWriter(f)))

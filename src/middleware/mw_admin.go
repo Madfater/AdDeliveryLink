@@ -1,8 +1,7 @@
 package middleware
 
 import (
-	"dcardAssignment/src/dto"
-
+	"github.com/Madfater/AdDeliveryLink/src/dto"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +14,7 @@ type AdminMiddleware struct{}
 func (AdminMiddleware) AdminBodyValidator(c *gin.Context) {
 	var body dto.Body
 
-	if err := c.ShouldBindBodyWith(&body,binding.JSON); err != nil {
+	if err := c.ShouldBindBodyWith(&body, binding.JSON); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Loading Body failed": err.Error()})
 		return
 	}
