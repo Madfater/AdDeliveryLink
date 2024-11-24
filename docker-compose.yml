@@ -2,11 +2,10 @@ version: '3'
 services:
   app:
     environment:
-      GIN_MODE: release
       MYSQL_USERNAME: root
       MYSQL_IP: db
       MYSQL_PORT: 3306
-      MYSQL_Database: DcardAssignment
+      MYSQL_DATABASE: AdDeliveryLink
     build: .
     ports:
       - "8080:8080"
@@ -21,7 +20,7 @@ services:
       - db-conf:/etc/mysql/conf.d
       - db-logs:/logs
     environment:
-      MYSQL_DATABASE: DcardAssignment
+      MYSQL_DATABASE: AdDeliveryLink
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
     ports:
       - "3306:3306"
