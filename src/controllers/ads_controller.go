@@ -4,6 +4,7 @@ import (
 	"github.com/Madfater/AdDeliveryLink/dto"
 	"github.com/Madfater/AdDeliveryLink/services"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"net/http"
 )
 
@@ -25,7 +26,7 @@ func NewAdsController(service services.AdsService) *AdsController {
 func (ctrl *AdsController) CreateAdvertisement(c *gin.Context) {
 	var body dto.CreateAdsReq
 
-	if err := c.ShouldBindJSON(&body); err != nil {
+	if err := c.ShouldBindBodyWith(&body, binding.JSON); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request: " + err.Error()})
 		return
 	}
