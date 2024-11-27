@@ -3,6 +3,7 @@ module github.com/Madfater/AdDeliveryLink
 go 1.18
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-gorm/caches/v4 v4.0.5
 	github.com/redis/go-redis/v9 v9.7.0
@@ -29,6 +30,7 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	golang.org/x/tools v0.19.0 // indirect
 )
 

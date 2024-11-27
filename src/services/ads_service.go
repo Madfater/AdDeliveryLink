@@ -24,12 +24,16 @@ func NewAdsService(repo repositories.AdsRepository) AdsService {
 func (s *adsService) CreateAdvertisement(req dto.CreateAdsReq) error {
 	defaultAgeStart := 1
 	defaultAgeEnd := 100
+	defaultGender := "F"
 
 	if req.Conditions.AgeStart == nil {
 		req.Conditions.AgeStart = &defaultAgeStart
 	}
 	if req.Conditions.AgeEnd == nil {
 		req.Conditions.AgeEnd = &defaultAgeEnd
+	}
+	if req.Conditions.Gender == nil {
+		req.Conditions.Gender = &defaultGender
 	}
 
 	ad := entity.Advertisement{
@@ -38,7 +42,7 @@ func (s *adsService) CreateAdvertisement(req dto.CreateAdsReq) error {
 		EndAt:    req.EndAt,
 		AgeStart: *req.Conditions.AgeStart,
 		AgeEnd:   *req.Conditions.AgeEnd,
-		Gender:   req.Conditions.Gender,
+		Gender:   *req.Conditions.Gender,
 		Country:  convertToCountries(req.Conditions.Country),
 		Platform: convertToPlatforms(req.Conditions.Platform),
 	}
