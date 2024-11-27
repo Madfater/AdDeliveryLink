@@ -2,6 +2,7 @@ package test
 
 import (
 	controlers "github.com/Madfater/AdDeliveryLink/controllers"
+	"github.com/Madfater/AdDeliveryLink/dto"
 	"github.com/Madfater/AdDeliveryLink/middleware"
 	"net/http"
 	"net/http/httptest"
@@ -13,7 +14,7 @@ import (
 
 func TestNormalQuery(t *testing.T) {
 	r := gin.Default()
-	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.RequestValidator[dto.Query]{}.GetQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10&age=25&gender=M&country=TW&platform=android"
 
@@ -31,7 +32,7 @@ func TestNormalQuery(t *testing.T) {
 
 func TestVaildQuery(t *testing.T) {
 	r := gin.Default()
-	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.RequestValidator[dto.Query]{}.GetQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=0&age=25&gender=M&country=TW&platform=android"
 
@@ -49,7 +50,7 @@ func TestVaildQuery(t *testing.T) {
 
 func TestMissingQuery(t *testing.T) {
 	r := gin.Default()
-	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.RequestValidator[dto.Query]{}.GetQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10&age=25&gender=F&country=TW"
 
@@ -67,7 +68,7 @@ func TestMissingQuery(t *testing.T) {
 
 func TestEmptyQuery(t *testing.T) {
 	r := gin.Default()
-	r.GET("/public/advertisement", middleware.PublicMiddleware{}.PublicQueryValidator, controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.RequestValidator[dto.Query]{}.GetQueryValidator, controlers.PublicController{}.PublicAdvertisement)
 
 	query := "offset=0&limit=10"
 

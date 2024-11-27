@@ -30,7 +30,7 @@ func TestCreateAdvertisement(t *testing.T) {
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", middleware.AdminMiddleware{}.AdminBodyValidator, controllers.AdminController{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", middleware.RequestValidator[dto.Body]{}.GetBodyValidator, controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {
@@ -62,7 +62,7 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", middleware.AdminMiddleware{}.AdminBodyValidator, controllers.AdminController{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", middleware.RequestValidator[dto.Body]{}.GetBodyValidator, controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {
@@ -89,7 +89,7 @@ func TestCreateWithEmptyConditions(t *testing.T) {
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", middleware.AdminMiddleware{}.AdminBodyValidator, controllers.AdminController{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", middleware.RequestValidator[dto.Body]{}.GetBodyValidator, controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {

@@ -3,6 +3,7 @@ package routers
 import (
 	"github.com/Madfater/AdDeliveryLink/controllers"
 	_ "github.com/Madfater/AdDeliveryLink/docs"
+	"github.com/Madfater/AdDeliveryLink/dto"
 	"github.com/Madfater/AdDeliveryLink/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -14,10 +15,10 @@ func RouterInit(r *gin.Engine) {
 	route := r.Group("/v1/api")
 	{
 		//Admin API
-		route.POST("/ad", middleware.AdminMiddleware{}.AdminBodyValidator, controllers.AdminController{}.CreateAdvertisement)
+		route.POST("/ad", middleware.RequestValidator[dto.Body]{}.GetBodyValidator, controllers.AdminController{}.CreateAdvertisement)
 
 		//Public API
-		route.GET("/ad", middleware.PublicMiddleware{}.PublicQueryValidator, controllers.PublicController{}.PublicAdvertisement)
+		route.GET("/ad", middleware.RequestValidator[dto.Response]{}.GetBodyValidator, controllers.PublicController{}.PublicAdvertisement)
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
