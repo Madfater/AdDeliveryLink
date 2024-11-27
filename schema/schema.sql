@@ -28,6 +28,12 @@ CREATE TABLE `country`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
+INSERT INTO `country` (`CountryCode`)
+VALUES ('US'), -- United States
+       ('CA'), -- Canada
+       ('TW'), -- Taiwan
+       ('JP'); -- Japan
+
 DROP TABLE IF EXISTS `platform`;
 
 CREATE TABLE `platform`
@@ -37,6 +43,11 @@ CREATE TABLE `platform`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
+
+INSERT INTO `platform` (`PlatformName`)
+VALUES ('web'),     -- Web platform
+       ('android'), -- Android platform
+       ('ios'); -- IOS platform
 
 DROP TABLE IF EXISTS `advertisement_country`;
 
