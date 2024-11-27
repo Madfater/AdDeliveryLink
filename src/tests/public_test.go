@@ -14,7 +14,7 @@ import (
 
 func TestNormalQuery(t *testing.T) {
 	r := gin.Default()
-	r.GET("/public/advertisement", middleware.RequestValidator[dto.Query]{}.GetQueryValidator, controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.RequestValidator[dto.GetAdsReq]{}.GetQueryValidator, controlers.PublicController{}.GetAdvertisement)
 
 	query := "offset=0&limit=10&age=25&gender=M&country=TW&platform=android"
 
@@ -32,7 +32,7 @@ func TestNormalQuery(t *testing.T) {
 
 func TestVaildQuery(t *testing.T) {
 	r := gin.Default()
-	r.GET("/public/advertisement", middleware.RequestValidator[dto.Query]{}.GetQueryValidator, controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.RequestValidator[dto.GetAdsReq]{}.GetQueryValidator, controlers.PublicController{}.GetAdvertisement)
 
 	query := "offset=0&limit=0&age=25&gender=M&country=TW&platform=android"
 
@@ -50,7 +50,7 @@ func TestVaildQuery(t *testing.T) {
 
 func TestMissingQuery(t *testing.T) {
 	r := gin.Default()
-	r.GET("/public/advertisement", middleware.RequestValidator[dto.Query]{}.GetQueryValidator, controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.RequestValidator[dto.GetAdsReq]{}.GetQueryValidator, controlers.PublicController{}.GetAdvertisement)
 
 	query := "offset=0&limit=10&age=25&gender=F&country=TW"
 
@@ -68,7 +68,7 @@ func TestMissingQuery(t *testing.T) {
 
 func TestEmptyQuery(t *testing.T) {
 	r := gin.Default()
-	r.GET("/public/advertisement", middleware.RequestValidator[dto.Query]{}.GetQueryValidator, controlers.PublicController{}.PublicAdvertisement)
+	r.GET("/public/advertisement", middleware.RequestValidator[dto.GetAdsReq]{}.GetQueryValidator, controlers.PublicController{}.GetAdvertisement)
 
 	query := "offset=0&limit=10"
 

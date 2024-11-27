@@ -1,4 +1,4 @@
-package models
+package entity
 
 import (
 	"time"
@@ -16,22 +16,6 @@ type Advertisement struct {
 	Platform []Platform `gorm:"many2many:advertisement_platform;foreignKey:ID;joinForeignKey:AdvertisementID;joinReferences:PlatformName;"`
 }
 
-type Country struct {
-	CountryCode string `gorm:"many2many:advertisement_country;primaryKey;column:CountryCode"`
-}
-
-type Platform struct {
-	PlatformName string `gorm:"many2many:advertisement_platform;primaryKey;column:PlatformName"`
-}
-
 func (Advertisement) TableName() string {
 	return "advertisement"
-}
-
-func (Country) TableName() string {
-	return "country"
-}
-
-func (Platform) TableName() string {
-	return "platform"
 }

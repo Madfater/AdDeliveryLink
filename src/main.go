@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/Madfater/AdDeliveryLink/models"
 	"github.com/Madfater/AdDeliveryLink/routers"
 	"github.com/Madfater/AdDeliveryLink/utils"
 	"io"
@@ -16,9 +15,6 @@ import (
 
 // @BasePath /v1/api
 func main() {
-
-	defer models.CloseDB()
-
 	gin.DisableConsoleColor()
 
 	f, _ := os.Create("gin.log")

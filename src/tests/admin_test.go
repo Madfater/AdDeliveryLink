@@ -17,11 +17,11 @@ import (
 
 func TestCreateAdvertisement(t *testing.T) {
 	// 準備測試數據
-	body := dto.Body{
+	body := dto.CreateAdsReq{
 		Title:   "Test Advertisement",
 		StartAt: time.Now(),
 		EndAt:   time.Now().Add(time.Hour * 24),
-		Conditions: dto.Conditions{
+		Conditions: dto.AdsConditions{
 			Country:  []string{"TW", "JP"},
 			Platform: []string{"ios"},
 		},
@@ -30,7 +30,7 @@ func TestCreateAdvertisement(t *testing.T) {
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", middleware.RequestValidator[dto.Body]{}.GetBodyValidator, controllers.AdminController{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", middleware.RequestValidator[dto.CreateAdsReq]{}.GetBodyValidator, controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {
@@ -48,11 +48,11 @@ func TestCreateAdvertisement(t *testing.T) {
 func TestCreateVaildAdvertisement(t *testing.T) {
 	g := "G"
 	// 準備測試數據
-	body := dto.Body{
+	body := dto.CreateAdsReq{
 		Title:   "Test Advertisement",
 		StartAt: time.Now(),
 		EndAt:   time.Now().Add(time.Hour * 24),
-		Conditions: dto.Conditions{
+		Conditions: dto.AdsConditions{
 			Country:  []string{"TW", "JP"},
 			Platform: []string{"ios"},
 			Gender:   &g,
@@ -62,7 +62,7 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", middleware.RequestValidator[dto.Body]{}.GetBodyValidator, controllers.AdminController{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", middleware.RequestValidator[dto.CreateAdsReq]{}.GetBodyValidator, controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {
@@ -79,17 +79,17 @@ func TestCreateVaildAdvertisement(t *testing.T) {
 
 func TestCreateWithEmptyConditions(t *testing.T) {
 	// 準備測試數據
-	body := dto.Body{
+	body := dto.CreateAdsReq{
 		Title:      "Sample Advertisement",
 		StartAt:    time.Now(),
 		EndAt:      time.Now().Add(24 * time.Hour),
-		Conditions: dto.Conditions{},
+		Conditions: dto.AdsConditions{},
 	}
 	jsonBody, _ := json.Marshal(body)
 
 	//設定MocK Server
 	r := gin.Default()
-	r.POST("/createAdvertisement", middleware.RequestValidator[dto.Body]{}.GetBodyValidator, controllers.AdminController{}.CreateAdvertisement)
+	r.POST("/createAdvertisement", middleware.RequestValidator[dto.CreateAdsReq]{}.GetBodyValidator, controllers.AdminController{}.CreateAdvertisement)
 
 	req, err := http.NewRequest("POST", "/createAdvertisement", bytes.NewBuffer(jsonBody))
 	if err != nil {

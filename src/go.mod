@@ -6,6 +6,8 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-gorm/caches/v4 v4.0.5
 	github.com/redis/go-redis/v9 v9.7.0
+	github.com/swaggo/files v1.0.1
+	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.4
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.12
@@ -15,7 +17,6 @@ require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
-	github.com/chenzhuoyu/iasm v0.9.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -28,14 +29,11 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/swaggo/files v1.0.1 // indirect
-	github.com/swaggo/gin-swagger v1.6.0 // indirect
 	golang.org/x/tools v0.19.0 // indirect
 )
 
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect
-	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
