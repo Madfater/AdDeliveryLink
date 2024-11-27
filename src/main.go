@@ -1,8 +1,15 @@
 package main
 
 import (
-	"github.com/Madfater/AdDeliveryLink/routers"
+	"github.com/Madfater/AdDeliveryLink/controllers"
+	"github.com/Madfater/AdDeliveryLink/dto"
+	"github.com/Madfater/AdDeliveryLink/middleware"
+	"github.com/Madfater/AdDeliveryLink/models"
+	"github.com/Madfater/AdDeliveryLink/repositories"
+	"github.com/Madfater/AdDeliveryLink/services"
 	"github.com/Madfater/AdDeliveryLink/utils"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"io"
 	"os"
 
@@ -23,8 +30,26 @@ func main() {
 	r.Use(gin.RecoveryWithWriter(io.MultiWriter(f)))
 	r.Use(gin.LoggerWithWriter(io.MultiWriter(f)))
 
-	routers.RouterInit(r)
+	appCtx, err := models.CreateAppContext("mysql", "redis")
+	utils.HandleError(err, "Fail to create application context")
+	defer appCtx.Close()
 
-	err := r.Run(":8080")
+	adsRepo := repositories.NewAdsRepository(appCtx.DB)
+	adsService := services.NewAdsService(adsRepo)
+
+	adsController := controllers.NewAdsController(adsService)
+
+	route := r.Group("/v1/api")
+	{
+		//Admin API
+		route.POST("/ad", middleware.RequestValidator[dto.CreateAdsReq]{}.GetBodyValidator, adsController.CreateAdvertisement)
+
+		//Public API
+		route.GET("/ad", middleware.RequestValidator[dto.GetAdsResp]{}.GetQueryValidator, adsController.GetAdvertisement)
+	}
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	err = r.Run(":8080")
 	utils.HandleError(err, "Fail to run server")
 }
