@@ -1,6 +1,9 @@
-package dto
+package data
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 type CreateAdsReq struct {
 	Title      string        `json:"title" validate:"required"`
@@ -17,16 +20,14 @@ type AdsConditions struct {
 	Gender   *string  `json:"gender" validate:"omitempty,oneof=M F"`
 }
 
-type GetAdsReq struct {
-	Offset   *int   `form:"offset" validate:"omitempty,gte=0"`
-	Limit    *int   `form:"limit" validate:"omitempty,gte=1,lte=100"`
-	Age      *int   `form:"age" validate:"omitempty,gte=1,lte=100"`
-	Gender   string `form:"gender" validate:"omitempty,oneof=F M"`
-	Country  string `form:"country" validate:"omitempty,country_code"`
-	Platform string `form:"platform" validate:"omitempty,oneof=ios android web"`
-}
+func (req CreateAdsReq) Validate() (bool, error) {
+	if req.StartAt.After(req.EndAt) {
+		return false, errors.New("StartAt must be less than EndAt")
+	}
 
-type GetAdsResp struct {
-	Title string    `json:"Title"`
-	EndAt time.Time `json:"EndAt"`
+	if *req.Conditions.AgeStart > *req.Conditions.AgeEnd {
+		return false, errors.New("AgeStart must be less than AgeEnd")
+	}
+
+	return true, nil
 }

@@ -3,7 +3,7 @@ package controllers
 import (
 	"errors"
 	"github.com/Madfater/AdDeliveryLink/controllers"
-	"github.com/Madfater/AdDeliveryLink/dto"
+	"github.com/Madfater/AdDeliveryLink/controllers/data"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/mock"
 	"net/http"
@@ -18,14 +18,14 @@ type MockAdsService struct {
 	mock.Mock
 }
 
-func (m *MockAdsService) CreateAdvertisement(req dto.CreateAdsReq) error {
+func (m *MockAdsService) CreateAdvertisement(req data.CreateAdsReq) error {
 	args := m.Called(req)
 	return args.Error(0)
 }
 
-func (m *MockAdsService) GetAdvertisements(req dto.GetAdsReq) ([]dto.GetAdsResp, error) {
+func (m *MockAdsService) GetAdvertisements(req data.GetAdsReq) ([]data.GetAdsResp, error) {
 	args := m.Called(req)
-	return args.Get(0).([]dto.GetAdsResp), args.Error(1)
+	return args.Get(0).([]data.GetAdsResp), args.Error(1)
 }
 
 func TestCreateAdvertisement(t *testing.T) {
@@ -82,7 +82,7 @@ func TestGetAdvertisement(t *testing.T) {
 	t.Run("success case", func(t *testing.T) {
 		// Mock Service
 		mockService := new(MockAdsService)
-		mockResult := []dto.GetAdsResp{
+		mockResult := []data.GetAdsResp{
 			{Title: "Ad Title 1", EndAt: time.Date(2024, time.January, 31, 0, 0, 0, 0, time.UTC)},
 			{Title: "Ad Title 2", EndAt: time.Date(2024, time.February, 28, 0, 0, 0, 0, time.UTC)},
 		}
@@ -106,7 +106,7 @@ func TestGetAdvertisement(t *testing.T) {
 
 	t.Run("error case", func(t *testing.T) {
 		mockService := new(MockAdsService)
-		mockService.On("GetAdvertisements", mock.Anything).Return([]dto.GetAdsResp{}, errors.New("database error"))
+		mockService.On("GetAdvertisements", mock.Anything).Return([]data.GetAdsResp{}, errors.New("database error"))
 
 		controller := controllers.NewAdsController(mockService)
 

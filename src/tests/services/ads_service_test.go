@@ -2,7 +2,7 @@ package services
 
 import (
 	"errors"
-	"github.com/Madfater/AdDeliveryLink/dto"
+	"github.com/Madfater/AdDeliveryLink/controllers/data"
 	"github.com/Madfater/AdDeliveryLink/entity"
 	"github.com/Madfater/AdDeliveryLink/services"
 	"github.com/stretchr/testify/mock"
@@ -48,11 +48,11 @@ func TestCreateAdvertisement(t *testing.T) {
 		mockRepo := new(MockAdsRepository)
 		service := services.NewAdsService(mockRepo)
 
-		req := dto.CreateAdsReq{
+		req := data.CreateAdsReq{
 			Title:   "Test Ad",
 			StartAt: time.Now(),
 			EndAt:   time.Now().Add(24 * time.Hour),
-			Conditions: dto.AdsConditions{
+			Conditions: data.AdsConditions{
 				AgeStart: nil, // 測試預設值
 				AgeEnd:   nil,
 				Gender:   nil,
@@ -78,7 +78,7 @@ func TestCreateAdvertisement(t *testing.T) {
 		mockRepo := new(MockAdsRepository)
 		service := services.NewAdsService(mockRepo)
 
-		req := dto.CreateAdsReq{
+		req := data.CreateAdsReq{
 			Title:   "Test Ad",
 			StartAt: time.Now(),
 			EndAt:   time.Now().Add(24 * time.Hour),
@@ -102,7 +102,7 @@ func TestGetAdvertisements(t *testing.T) {
 		mockRepo := new(MockAdsRepository)
 		service := services.NewAdsService(mockRepo)
 
-		query := dto.GetAdsReq{
+		query := data.GetAdsReq{
 			Platform: "mobile",
 			Country:  "US",
 			Age:      new(int),
@@ -135,7 +135,7 @@ func TestGetAdvertisements(t *testing.T) {
 		mockRepo := new(MockAdsRepository)
 		service := services.NewAdsService(mockRepo)
 
-		query := dto.GetAdsReq{}
+		query := data.GetAdsReq{}
 
 		mockRepo.On("FindByCondition", mock.Anything, 5, 0).Return([]entity.Advertisement{}, errors.New("repository error"))
 

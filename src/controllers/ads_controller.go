@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/Madfater/AdDeliveryLink/dto"
+	"github.com/Madfater/AdDeliveryLink/controllers/data"
 	"github.com/Madfater/AdDeliveryLink/services"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -18,13 +18,13 @@ func NewAdsController(service services.AdsService) *AdsController {
 
 // @Summary Creates a new advertisement
 // @Description Creates a new advertisement with the specified title, start and end dates, and conditions.
-// @Param body body dto.CreateAdsReq true "Advertisement information"
+// @Param body body data.CreateAdsReq true "Advertisement information"
 // @Tags Advertisement
 // @Success 200
 // @Failure 400
 // @Router /ad [post]
 func (ctrl *AdsController) CreateAdvertisement(c *gin.Context) {
-	var body dto.CreateAdsReq
+	var body data.CreateAdsReq
 
 	if err := c.ShouldBindBodyWith(&body, binding.JSON); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request: " + err.Error()})
@@ -42,13 +42,13 @@ func (ctrl *AdsController) CreateAdvertisement(c *gin.Context) {
 
 // @Summary Gets a list of advertisements
 // @Description Gets a list of advertisements that match the specified conditions.
-// @Param query query dto.GetAdsReq true "Advertisement query parameters"
+// @Param query query data.GetAdsReq true "Advertisement query parameters"
 // @Tags Advertisement
-// @Success 200 {object} []dto.GetAdsResp
+// @Success 200 {object} []data.GetAdsResp
 // @Failure 400
 // @Router /ad [get]
 func (ctrl *AdsController) GetAdvertisement(c *gin.Context) {
-	var query dto.GetAdsReq
+	var query data.GetAdsReq
 
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid query parameters", "error": err.Error()})

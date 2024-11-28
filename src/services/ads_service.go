@@ -2,15 +2,15 @@ package services
 
 import (
 	"errors"
-	"github.com/Madfater/AdDeliveryLink/dto"
+	"github.com/Madfater/AdDeliveryLink/controllers/data"
 	"github.com/Madfater/AdDeliveryLink/entity"
 	"github.com/Madfater/AdDeliveryLink/repositories"
 	"time"
 )
 
 type AdsService interface {
-	CreateAdvertisement(req dto.CreateAdsReq) error
-	GetAdvertisements(query dto.GetAdsReq) ([]dto.GetAdsResp, error)
+	CreateAdvertisement(req data.CreateAdsReq) error
+	GetAdvertisements(query data.GetAdsReq) ([]data.GetAdsResp, error)
 }
 
 type adsService struct {
@@ -21,7 +21,7 @@ func NewAdsService(repo repositories.AdsRepository) AdsService {
 	return &adsService{repo: repo}
 }
 
-func (s *adsService) CreateAdvertisement(req dto.CreateAdsReq) error {
+func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) error {
 	defaultAgeStart := 1
 	defaultAgeEnd := 100
 	defaultGender := "F"
@@ -53,7 +53,7 @@ func (s *adsService) CreateAdvertisement(req dto.CreateAdsReq) error {
 	return nil
 }
 
-func (s *adsService) GetAdvertisements(query dto.GetAdsReq) ([]dto.GetAdsResp, error) {
+func (s *adsService) GetAdvertisements(query data.GetAdsReq) ([]data.GetAdsResp, error) {
 	// 設置預設值
 	defaultLimit := 5
 	defaultOffset := 0
@@ -81,9 +81,9 @@ func (s *adsService) GetAdvertisements(query dto.GetAdsReq) ([]dto.GetAdsResp, e
 	}
 
 	// 將實體轉換為回應格式
-	var responses []dto.GetAdsResp
+	var responses []data.GetAdsResp
 	for _, result := range results {
-		responses = append(responses, dto.GetAdsResp{
+		responses = append(responses, data.GetAdsResp{
 			Title: result.Title,
 			EndAt: result.EndAt,
 		})

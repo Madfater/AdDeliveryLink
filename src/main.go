@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/Madfater/AdDeliveryLink/controllers"
-	"github.com/Madfater/AdDeliveryLink/dto"
+	"github.com/Madfater/AdDeliveryLink/controllers/data"
 	"github.com/Madfater/AdDeliveryLink/middleware"
 	"github.com/Madfater/AdDeliveryLink/models"
 	"github.com/Madfater/AdDeliveryLink/repositories"
@@ -42,10 +42,10 @@ func main() {
 	route := r.Group("/v1/api")
 	{
 		//Admin API
-		route.POST("/ad", middleware.RequestValidator[dto.CreateAdsReq]{}.GetBodyValidator, adsController.CreateAdvertisement)
+		route.POST("/ad", middleware.NewValidator(data.CreateAdsReq{}).GetBodyValidator, adsController.CreateAdvertisement)
 
 		//Public API
-		route.GET("/ad", middleware.RequestValidator[dto.GetAdsResp]{}.GetQueryValidator, adsController.GetAdvertisement)
+		route.GET("/ad", middleware.NewValidator(data.GetAdsReq{}).GetQueryValidator, adsController.GetAdvertisement)
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
