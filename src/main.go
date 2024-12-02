@@ -60,8 +60,8 @@ func main() {
 
 	adsController := controllers.NewAdsController(adsService)
 
-	validator := utils.ValidationRegister{}
-	validator.EnumRegister()
+	validator := utils.NewValidationRegistrant()
+	validator.RegisterEnum()
 
 	route := r.Group("/v1/api")
 	{

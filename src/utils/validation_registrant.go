@@ -7,9 +7,13 @@ import (
 	"reflect"
 )
 
-type ValidationRegister struct{}
+type ValidationRegistrant struct{}
 
-func (v ValidationRegister) EnumRegister() {
+func NewValidationRegistrant() ValidationRegistrant {
+	return ValidationRegistrant{}
+}
+
+func (v ValidationRegistrant) RegisterEnum() {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		err := v.RegisterValidation("enum", validateEnum)
 		if err != nil {

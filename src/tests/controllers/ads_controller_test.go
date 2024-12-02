@@ -32,8 +32,8 @@ func (m *MockAdsService) GetAdvertisements(req data.GetAdsReq) ([]data.GetAdsRes
 func TestCreateAdvertisement(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
-	validator := utils.ValidationRegister{}
-	validator.EnumRegister()
+	validator := utils.ValidationRegistrant{}
+	validator.RegisterEnum()
 
 	t.Run("success case", func(t *testing.T) {
 		// Mock Service
@@ -83,8 +83,8 @@ func TestCreateAdvertisement(t *testing.T) {
 func TestGetAdvertisement(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
-	validator := utils.ValidationRegister{}
-	validator.EnumRegister()
+	validator := utils.ValidationRegistrant{}
+	validator.RegisterEnum()
 
 	t.Run("success case", func(t *testing.T) {
 		// Mock Service
