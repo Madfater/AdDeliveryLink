@@ -21,7 +21,6 @@ const docTemplate = `{
                 "tags": [
                     "Advertisement"
                 ],
-                "summary": "Gets a list of advertisements",
                 "parameters": [
                     {
                         "maximum": 100,
@@ -31,18 +30,38 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "CN",
+                            "US",
+                            "JP",
+                            "TW"
+                        ],
                         "type": "string",
+                        "x-enum-varnames": [
+                            "CN",
+                            "US",
+                            "JP",
+                            "TW"
+                        ],
                         "name": "country",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "enum": [
+                            "M",
                             "F",
-                            "M"
+                            "B"
                         ],
                         "type": "string",
+                        "x-enum-varnames": [
+                            "Male",
+                            "Female",
+                            "Both"
+                        ],
                         "name": "gender",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "maximum": 100,
@@ -59,13 +78,19 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "ios",
                             "android",
+                            "ios",
                             "web"
                         ],
                         "type": "string",
+                        "x-enum-varnames": [
+                            "Android",
+                            "IOS",
+                            "Web"
+                        ],
                         "name": "platform",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -74,7 +99,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.Response"
+                                "$ref": "#/definitions/data.GetAdsResp"
                             }
                         }
                     },
@@ -88,7 +113,6 @@ const docTemplate = `{
                 "tags": [
                     "Advertisement"
                 ],
-                "summary": "Creates a new advertisement",
                 "parameters": [
                     {
                         "description": "Advertisement information",
@@ -96,7 +120,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.Body"
+                            "$ref": "#/definitions/data.CreateAdsReq"
                         }
                     }
                 ],
@@ -112,31 +136,13 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.Body": {
+        "data.AdsConditions": {
             "type": "object",
             "required": [
-                "conditions",
-                "endAt",
-                "startAt",
-                "title"
+                "country",
+                "gender",
+                "platform"
             ],
-            "properties": {
-                "conditions": {
-                    "$ref": "#/definitions/dto.Conditions"
-                },
-                "endAt": {
-                    "type": "string"
-                },
-                "startAt": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.Conditions": {
-            "type": "object",
             "properties": {
                 "ageEnd": {
                     "type": "integer",
@@ -151,25 +157,46 @@ const docTemplate = `{
                 "country": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/enum.CountryCode"
                     }
                 },
                 "gender": {
-                    "type": "string",
-                    "enum": [
-                        "M",
-                        "F"
-                    ]
+                    "$ref": "#/definitions/enum.Gender"
                 },
                 "platform": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/enum.Platform"
                     }
                 }
             }
         },
-        "dto.Response": {
+        "data.CreateAdsReq": {
+            "type": "object",
+            "required": [
+                "conditions",
+                "endAt",
+                "startAt",
+                "title"
+            ],
+            "properties": {
+                "conditions": {
+                    "$ref": "#/definitions/data.AdsConditions"
+                },
+                "endAt": {
+                    "type": "string",
+                    "example": "2021-01-01T00:00:00Z"
+                },
+                "startAt": {
+                    "type": "string",
+                    "example": "2021-01-01T00:00:00Z"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.GetAdsResp": {
             "type": "object",
             "properties": {
                 "EndAt": {
@@ -179,6 +206,47 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "enum.CountryCode": {
+            "type": "string",
+            "enum": [
+                "CN",
+                "US",
+                "JP",
+                "TW"
+            ],
+            "x-enum-varnames": [
+                "CN",
+                "US",
+                "JP",
+                "TW"
+            ]
+        },
+        "enum.Gender": {
+            "type": "string",
+            "enum": [
+                "M",
+                "F",
+                "B"
+            ],
+            "x-enum-varnames": [
+                "Male",
+                "Female",
+                "Both"
+            ]
+        },
+        "enum.Platform": {
+            "type": "string",
+            "enum": [
+                "android",
+                "ios",
+                "web"
+            ],
+            "x-enum-varnames": [
+                "Android",
+                "IOS",
+                "Web"
+            ]
         }
     }
 }`

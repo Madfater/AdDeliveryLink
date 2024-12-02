@@ -1,23 +1,22 @@
 package middleware
 
 import (
-	"github.com/Madfater/AdDeliveryLink/controllers/data/base"
+	"github.com/Madfater/AdDeliveryLink/controllers/data"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"github.com/go-playground/validator/v10"
 	"net/http"
 )
 
-type RequestValidator[T base.ReqInterface] struct {
-	validateBody T
+type RequestValidator[T data.ReqInterface] struct {
+	requestType T
 }
 
-func NewValidator[T base.ReqInterface](validateBody T) *RequestValidator[T] {
-	return &RequestValidator[T]{validateBody: validateBody}
+func NewValidator[T data.ReqInterface](requestType T) *RequestValidator[T] {
+	return &RequestValidator[T]{requestType: requestType}
 }
 
 func (v *RequestValidator[T]) GetBodyValidator(c *gin.Context) {
-	if err := c.ShouldBindBodyWith(&v.validateBody, binding.JSON); err != nil {
+	if err := c.ShouldBindBodyWith(&v.requestType, binding.JSON); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"Loading Body failed": err.Error(),
 		})
@@ -29,7 +28,7 @@ func (v *RequestValidator[T]) GetBodyValidator(c *gin.Context) {
 }
 
 func (v *RequestValidator[T]) GetQueryValidator(c *gin.Context) {
-	if err := c.ShouldBindQuery(&v.validateBody); err != nil {
+	if err := c.ShouldBindQuery(&v.requestType); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"Loading Query failed": err.Error(),
 		})
@@ -41,17 +40,7 @@ func (v *RequestValidator[T]) GetQueryValidator(c *gin.Context) {
 }
 
 func (v *RequestValidator[T]) validate(c *gin.Context) {
-	if isValid, err := v.validateBody.Validate(); err != nil && !isValid {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"validate error": err.Error(),
-		})
-		c.Abort()
-		return
-	}
-
-	validate := validator.New()
-
-	if err := validate.Struct(&v.validateBody); err != nil {
+	if isValid, err := v.requestType.Validate(); err != nil && !isValid {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"validate error": err.Error(),
 		})

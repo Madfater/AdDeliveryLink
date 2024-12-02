@@ -16,7 +16,7 @@ func NewAdsController(service services.AdsService) *AdsController {
 	return &AdsController{service: service}
 }
 
-// @Summary Creates a new advertisement
+// CreateAdvertisement @Summary Creates a new advertisement
 // @Description Creates a new advertisement with the specified title, start and end dates, and conditions.
 // @Param body body data.CreateAdsReq true "Advertisement information"
 // @Tags Advertisement
@@ -40,7 +40,7 @@ func (ctrl *AdsController) CreateAdvertisement(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "成功建立"})
 }
 
-// @Summary Gets a list of advertisements
+// GetAdvertisement @Summary Gets a list of advertisements
 // @Description Gets a list of advertisements that match the specified conditions.
 // @Param query query data.GetAdsReq true "Advertisement query parameters"
 // @Tags Advertisement

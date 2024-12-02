@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/Madfater/AdDeliveryLink/controllers/data"
 	"github.com/Madfater/AdDeliveryLink/entity"
+	"github.com/Madfater/AdDeliveryLink/enum"
 	"github.com/Madfater/AdDeliveryLink/repositories"
 	"time"
 )
@@ -24,16 +25,12 @@ func NewAdsService(repo repositories.AdsRepository) AdsService {
 func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) error {
 	defaultAgeStart := 1
 	defaultAgeEnd := 100
-	defaultGender := "F"
 
 	if req.Conditions.AgeStart == nil {
 		req.Conditions.AgeStart = &defaultAgeStart
 	}
 	if req.Conditions.AgeEnd == nil {
 		req.Conditions.AgeEnd = &defaultAgeEnd
-	}
-	if req.Conditions.Gender == nil {
-		req.Conditions.Gender = &defaultGender
 	}
 
 	ad := entity.Advertisement{
@@ -42,7 +39,7 @@ func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) error {
 		EndAt:    req.EndAt,
 		AgeStart: *req.Conditions.AgeStart,
 		AgeEnd:   *req.Conditions.AgeEnd,
-		Gender:   *req.Conditions.Gender,
+		Gender:   req.Conditions.Gender,
 		Country:  convertToCountries(req.Conditions.Country),
 		Platform: convertToPlatforms(req.Conditions.Platform),
 	}
@@ -91,7 +88,7 @@ func (s *adsService) GetAdvertisements(query data.GetAdsReq) ([]data.GetAdsResp,
 	return responses, nil
 }
 
-func convertToPlatforms(platformNames []string) []entity.Platform {
+func convertToPlatforms(platformNames []enum.Platform) []entity.Platform {
 	var platforms []entity.Platform
 	for _, name := range platformNames {
 		platforms = append(platforms, entity.Platform{PlatformName: name})
@@ -99,7 +96,7 @@ func convertToPlatforms(platformNames []string) []entity.Platform {
 	return platforms
 }
 
-func convertToCountries(platformNames []string) []entity.Country {
+func convertToCountries(platformNames []enum.CountryCode) []entity.Country {
 	var countries []entity.Country
 	for _, name := range platformNames {
 		countries = append(countries, entity.Country{CountryCode: name})

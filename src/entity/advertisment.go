@@ -1,19 +1,23 @@
 package entity
 
 import (
+	"github.com/Madfater/AdDeliveryLink/enum"
 	"time"
 )
 
 type Advertisement struct {
-	ID       uint       `gorm:"primaryKey"`
-	Title    string     `gorm:"not null"`
-	StartAt  time.Time  `gorm:"not null;column:StartAt"`
-	EndAt    time.Time  `gorm:"not null;column:EndAt"`
-	AgeStart int        `gorm:"check:AgeStart >= 1 AND AgeStart <= 100;column:AgeStart"`
-	AgeEnd   int        `gorm:"check:AgeEnd >= 1 AND AgeEnd <= 100;column:AgeEnd"`
-	Gender   string     `gorm:"type:ENUM('M', 'F')"`
-	Country  []Country  `gorm:"many2many:advertisement_country;foreignKey:ID;joinForeignKey:AdvertisementID;joinReferences:CountryCode;"`
-	Platform []Platform `gorm:"many2many:advertisement_platform;foreignKey:ID;joinForeignKey:AdvertisementID;joinReferences:PlatformName;"`
+	ID          int         `gorm:"column:id;primary_key;AUTO_INCREMENT"`
+	Title       string      `gorm:"column:title;NOT NULL"`
+	StartAt     time.Time   `gorm:"column:start_at;NOT NULL"`
+	EndAt       time.Time   `gorm:"column:end_at;NOT NULL"`
+	AgeStart    int         `gorm:"column:age_start"`
+	AgeEnd      int         `gorm:"column:age_end"`
+	Gender      enum.Gender `gorm:"column:gender"`
+	Status      bool        `gorm:"column:status;;default:true"`
+	CreatedDate time.Time   `gorm:"column:created_date;default:CURRENT_TIMESTAMP"`
+	UpdatedDate time.Time   `gorm:"column:updated_date;default:CURRENT_TIMESTAMP"`
+	Country     []Country   `gorm:"many2many:advertisement_country;foreignKey:ID;joinForeignKey:advertisement_id;joinReferences:country_code;"`
+	Platform    []Platform  `gorm:"many2many:advertisement_platform;foreignKey:ID;joinForeignKey:advertisement_id;joinReferences:platform_name;"`
 }
 
 func (Advertisement) TableName() string {

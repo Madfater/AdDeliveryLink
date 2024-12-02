@@ -1,22 +1,6 @@
 basePath: /v1/api
 definitions:
-  dto.Body:
-    properties:
-      conditions:
-        $ref: '#/definitions/dto.Conditions'
-      endAt:
-        type: string
-      startAt:
-        type: string
-      title:
-        type: string
-    required:
-    - conditions
-    - endAt
-    - startAt
-    - title
-    type: object
-  dto.Conditions:
+  data.AdsConditions:
     properties:
       ageEnd:
         maximum: 100
@@ -28,25 +12,76 @@ definitions:
         type: integer
       country:
         items:
-          type: string
+          $ref: '#/definitions/enum.CountryCode'
         type: array
       gender:
-        enum:
-        - M
-        - F
-        type: string
+        $ref: '#/definitions/enum.Gender'
       platform:
         items:
-          type: string
+          $ref: '#/definitions/enum.Platform'
         type: array
+    required:
+      - country
+      - gender
+      - platform
     type: object
-  dto.Response:
+  data.CreateAdsReq:
+    properties:
+      conditions:
+        $ref: '#/definitions/data.AdsConditions'
+      endAt:
+        example: "2021-01-01T00:00:00Z"
+        type: string
+      startAt:
+        example: "2021-01-01T00:00:00Z"
+        type: string
+      title:
+        type: string
+    required:
+      - conditions
+      - endAt
+      - startAt
+      - title
+    type: object
+  data.GetAdsResp:
     properties:
       EndAt:
         type: string
       Title:
         type: string
     type: object
+  enum.CountryCode:
+    enum:
+      - CN
+      - US
+      - JP
+      - TW
+    type: string
+    x-enum-varnames:
+      - CN
+      - US
+      - JP
+      - TW
+  enum.Gender:
+    enum:
+      - M
+      - F
+      - B
+    type: string
+    x-enum-varnames:
+      - Male
+      - Female
+      - Both
+  enum.Platform:
+    enum:
+      - android
+      - ios
+      - web
+    type: string
+    x-enum-varnames:
+      - Android
+      - IOS
+      - Web
 info:
   contact: {}
   description: a simple API for advertisement
@@ -62,15 +97,32 @@ paths:
         minimum: 1
         name: age
         type: integer
-      - in: query
-        name: country
-        type: string
       - enum:
-        - F
+          - CN
+          - US
+          - JP
+          - TW
+        in: query
+        name: country
+        required: true
+        type: string
+        x-enum-varnames:
+          - CN
+          - US
+          - JP
+          - TW
+      - enum:
         - M
+        - F
+        - B
         in: query
         name: gender
+        required: true
         type: string
+        x-enum-varnames:
+          - Male
+          - Female
+          - Both
       - in: query
         maximum: 100
         minimum: 1
@@ -81,22 +133,26 @@ paths:
         name: offset
         type: integer
       - enum:
-        - ios
         - android
+        - ios
         - web
         in: query
         name: platform
+        required: true
         type: string
+        x-enum-varnames:
+          - Android
+          - IOS
+          - Web
       responses:
         "200":
           description: OK
           schema:
             items:
-              $ref: '#/definitions/dto.Response'
+              $ref: '#/definitions/data.GetAdsResp'
             type: array
         "400":
           description: Bad Request
-      summary: Gets a list of advertisements
       tags:
       - Advertisement
     post:
@@ -108,13 +164,12 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/dto.Body'
+          $ref: '#/definitions/data.CreateAdsReq'
       responses:
         "200":
           description: OK
         "400":
           description: Bad Request
-      summary: Creates a new advertisement
       tags:
       - Advertisement
 swagger: "2.0"
