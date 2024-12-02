@@ -55,7 +55,7 @@ func TestCreateAdvertisement(t *testing.T) {
 			Conditions: data.AdsConditions{
 				AgeStart: nil, // 測試預設值
 				AgeEnd:   nil,
-				Gender:   nil,
+				Gender:   "B",
 			},
 		}
 
