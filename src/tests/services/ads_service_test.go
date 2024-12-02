@@ -3,7 +3,9 @@ package services
 import (
 	"errors"
 	"github.com/Madfater/AdDeliveryLink/controllers/data"
+	"github.com/Madfater/AdDeliveryLink/dto"
 	"github.com/Madfater/AdDeliveryLink/entity"
+	"github.com/Madfater/AdDeliveryLink/enum"
 	"github.com/Madfater/AdDeliveryLink/services"
 	"github.com/stretchr/testify/mock"
 	"testing"
@@ -38,12 +40,13 @@ func (m *MockAdsRepository) Create(ad *entity.Advertisement) error {
 	return args.Error(0)
 }
 
-func (m *MockAdsRepository) FindByCondition(filters map[string]interface{}, limit, offset int) ([]entity.Advertisement, error) {
+func (m *MockAdsRepository) FindByCondition(filters dto.Filter, limit, offset int) ([]entity.Advertisement, error) {
 	args := m.Called(filters, limit, offset)
 	return args.Get(0).([]entity.Advertisement), args.Error(1)
 }
 
 func TestCreateAdvertisement(t *testing.T) {
+
 	t.Run("successfully create advertisement", func(t *testing.T) {
 		mockRepo := new(MockAdsRepository)
 		service := services.NewAdsService(mockRepo)
@@ -53,9 +56,9 @@ func TestCreateAdvertisement(t *testing.T) {
 			StartAt: time.Now(),
 			EndAt:   time.Now().Add(24 * time.Hour),
 			Conditions: data.AdsConditions{
-				AgeStart: nil, // 測試預設值
-				AgeEnd:   nil,
-				Gender:   "B",
+				Gender:   "F",
+				Platform: []enum.Platform{enum.IOS},
+				Country:  []enum.CountryCode{enum.US},
 			},
 		}
 

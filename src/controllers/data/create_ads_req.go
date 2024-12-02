@@ -16,9 +16,9 @@ type CreateAdsReq struct {
 type AdsConditions struct {
 	AgeStart *int               `json:"ageStart" validate:"omitempty,gte=1,lte=100"`
 	AgeEnd   *int               `json:"ageEnd" validate:"omitempty,gte=1,lte=100"`
-	Country  []enum.CountryCode `json:"country" validate:"omitempty,dive" binding:"required,enum"`
-	Platform []enum.Platform    `json:"platform" validate:"omitempty,dive" binding:"required,enum"`
-	Gender   enum.Gender        `json:"gender" validate:"omitempty" binding:"required,enum"`
+	Country  []enum.CountryCode `json:"country" validate:"required,dive" binding:"required,enum"`
+	Platform []enum.Platform    `json:"platform" validate:"required,dive" binding:"required,enum"`
+	Gender   enum.Gender        `json:"gender" validate:"required" binding:"required,enum"`
 }
 
 func (req CreateAdsReq) Validate() (bool, error) {

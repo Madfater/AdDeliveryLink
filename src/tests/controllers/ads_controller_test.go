@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/Madfater/AdDeliveryLink/controllers"
 	"github.com/Madfater/AdDeliveryLink/controllers/data"
+	"github.com/Madfater/AdDeliveryLink/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/mock"
 	"net/http"
@@ -31,6 +32,9 @@ func (m *MockAdsService) GetAdvertisements(req data.GetAdsReq) ([]data.GetAdsRes
 func TestCreateAdvertisement(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
+	validator := utils.ValidationRegister{}
+	validator.EnumRegister()
+
 	t.Run("success case", func(t *testing.T) {
 		// Mock Service
 		mockService := new(MockAdsService)
@@ -42,7 +46,7 @@ func TestCreateAdvertisement(t *testing.T) {
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)
 
-		body := `{"title":"Ad Title","start_at":"2024-01-01","end_at":"2024-01-31","conditions":{"gender":"male"}}`
+		body := `{"title":"Ad Title","start_at":"2024-01-01","end_at":"2024-01-31","conditions":{"gender":"M","age_start":1,"age_end":100,"country":["US"],"platform":["ios"]}}`
 		c.Request = httptest.NewRequest(http.MethodPost, "/ad", strings.NewReader(body))
 		c.Request.Header.Set("Content-Type", "application/json")
 
@@ -79,6 +83,9 @@ func TestCreateAdvertisement(t *testing.T) {
 func TestGetAdvertisement(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
+	validator := utils.ValidationRegister{}
+	validator.EnumRegister()
+
 	t.Run("success case", func(t *testing.T) {
 		// Mock Service
 		mockService := new(MockAdsService)
@@ -94,7 +101,7 @@ func TestGetAdvertisement(t *testing.T) {
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)
 
-		c.Request = httptest.NewRequest(http.MethodGet, "/ad?gender=male", nil)
+		c.Request = httptest.NewRequest(http.MethodGet, "/ad?gender=F", nil)
 
 		controller.GetAdvertisement(c)
 
@@ -113,7 +120,7 @@ func TestGetAdvertisement(t *testing.T) {
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)
 
-		c.Request = httptest.NewRequest(http.MethodGet, "/ad?gender=male", nil)
+		c.Request = httptest.NewRequest(http.MethodGet, "/ad?gender=F", nil)
 
 		controller.GetAdvertisement(c)
 

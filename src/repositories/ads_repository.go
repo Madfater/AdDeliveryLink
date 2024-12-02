@@ -1,13 +1,14 @@
 package repositories
 
 import (
+	"github.com/Madfater/AdDeliveryLink/dto"
 	"github.com/Madfater/AdDeliveryLink/entity"
 	"gorm.io/gorm"
 )
 
 type AdsRepository interface {
 	RepositoryInterface[entity.Advertisement]
-	FindByCondition(filters map[string]interface{}, limit, offset int) ([]entity.Advertisement, error)
+	FindByCondition(filter dto.Filter, limit, offset int) ([]entity.Advertisement, error)
 }
 
 type adsRepository struct {
@@ -20,30 +21,29 @@ func NewAdsRepository(db *gorm.DB) AdsRepository {
 	}
 }
 
-func (r *adsRepository) FindByCondition(filters map[string]interface{}, limit, offset int) ([]entity.Advertisement, error) {
+func (r *adsRepository) FindByCondition(filter dto.Filter, limit, offset int) ([]entity.Advertisement, error) {
 	var results []entity.Advertisement
 
 	query := r.db.Model(&entity.Advertisement{}).
-		Select("DISTINCT advertisement.Title", "advertisement.EndAt").
+		Select("DISTINCT advertisement.Title", "advertisement.end_at").
 		Joins("left join advertisement_country on advertisement.ID = advertisement_country.advertisement_id").
 		Joins("left join advertisement_platform on advertisement.ID = advertisement_platform.advertisement_id")
 
-	if platform, ok := filters["platform"]; ok {
-		query.Where(r.db.Where("advertisement_platform.platform_name = ?", platform).Or("advertisement_platform.platform_name is NULL"))
+	if platform := filter.Platform; platform != "" {
+		query.Where(r.db.Where("advertisement_platform.platform_name = ?", platform))
 	}
-	if country, ok := filters["country"]; ok {
-		query.Where(r.db.Where("advertisement_country.country_code = ?", country).Or("advertisement_country.country_code is NULL"))
+	if country := filter.Country; country != "" {
+		query.Where(r.db.Where("advertisement_country.country_code = ?", country))
 	}
-	if gender, ok := filters["gender"]; ok {
-		query.Where(r.db.Where("advertisement.Gender = ?", gender).Or("advertisement.Gender is NULL"))
+	if gender := filter.Gender; gender != "" {
+		query.Where(r.db.Where("advertisement.Gender = ?", gender))
 	}
-	if age, ok := filters["age"]; ok {
-		query.Where("advertisement.AgeStart <= ? AND advertisement.AgeEnd >= ?", age, age)
-	}
-	if startTime, ok := filters["start_time"]; ok {
-		query.Where("advertisement.StartAt <= ? AND advertisement.EndAt >= ?", startTime, startTime)
+	if age := filter.Age; age != nil {
+		query.Where("advertisement.age_start <= ? AND advertisement.age_end >= ?", age, age)
 	}
 
-	err := query.Limit(limit).Offset(offset).Order("endAt asc").Find(&results).Error
+	query.Where("advertisement.start_at <= ? AND advertisement.end_at >= ?", filter.Time, filter.Time)
+
+	err := query.Limit(limit).Offset(offset).Order("end_at asc").Find(&results).Error
 	return results, err
 }

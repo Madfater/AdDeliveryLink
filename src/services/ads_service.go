@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"github.com/Madfater/AdDeliveryLink/controllers/data"
+	"github.com/Madfater/AdDeliveryLink/dto"
 	"github.com/Madfater/AdDeliveryLink/entity"
 	"github.com/Madfater/AdDeliveryLink/enum"
 	"github.com/Madfater/AdDeliveryLink/repositories"
@@ -23,22 +24,22 @@ func NewAdsService(repo repositories.AdsRepository) AdsService {
 }
 
 func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) error {
-	defaultAgeStart := 1
-	defaultAgeEnd := 100
+	ageStart := 1
+	ageEnd := 100
 
-	if req.Conditions.AgeStart == nil {
-		req.Conditions.AgeStart = &defaultAgeStart
+	if req.Conditions.AgeStart != nil {
+		ageStart = *req.Conditions.AgeStart
 	}
-	if req.Conditions.AgeEnd == nil {
-		req.Conditions.AgeEnd = &defaultAgeEnd
+	if req.Conditions.AgeEnd != nil {
+		ageEnd = *req.Conditions.AgeEnd
 	}
 
 	ad := entity.Advertisement{
 		Title:    req.Title,
 		StartAt:  req.StartAt,
 		EndAt:    req.EndAt,
-		AgeStart: *req.Conditions.AgeStart,
-		AgeEnd:   *req.Conditions.AgeEnd,
+		AgeStart: ageStart,
+		AgeEnd:   ageEnd,
 		Gender:   req.Conditions.Gender,
 		Country:  convertToCountries(req.Conditions.Country),
 		Platform: convertToPlatforms(req.Conditions.Platform),
@@ -52,27 +53,27 @@ func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) error {
 
 func (s *adsService) GetAdvertisements(query data.GetAdsReq) ([]data.GetAdsResp, error) {
 	// 設置預設值
-	defaultLimit := 5
-	defaultOffset := 0
-	if query.Limit == nil {
-		query.Limit = &defaultLimit
+	limit := 5
+	offset := 0
+	if query.Limit != nil {
+		limit = *query.Limit
 	}
-	if query.Offset == nil {
-		query.Offset = &defaultOffset
+	if query.Offset != nil {
+		offset = *query.Offset
 	}
 
 	// 處理篩選條件
 	currentTime := time.Now().Truncate(time.Hour)
-	filters := map[string]interface{}{
-		"platform":   query.Platform,
-		"country":    query.Country,
-		"gender":     query.Gender,
-		"age":        query.Age,
-		"start_time": currentTime,
+	filters := dto.Filter{
+		Platform: query.Platform,
+		Country:  query.Country,
+		Gender:   query.Gender,
+		Age:      query.Age,
+		Time:     currentTime,
 	}
 
 	// 調用 Repository
-	results, err := s.repo.FindByCondition(filters, *query.Limit, *query.Offset)
+	results, err := s.repo.FindByCondition(filters, limit, offset)
 	if err != nil {
 		return nil, err
 	}
