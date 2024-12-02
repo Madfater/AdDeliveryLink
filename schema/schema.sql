@@ -1,72 +1,68 @@
 DROP TABLE IF EXISTS `advertisement`;
-
 CREATE TABLE `advertisement` (
-  `ID` int NOT NULL AUTO_INCREMENT,
-  `Title` varchar(255) NOT NULL,
-  `StartAt` datetime NOT NULL,
-  `EndAt` datetime NOT NULL,
-  `AgeStart` int DEFAULT NULL,
-  `AgeEnd` int DEFAULT NULL,
-  `Gender` enum('M','F') DEFAULT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `idx_advertisement_id` (`ID`),
-  KEY `idx_advertisement_ageStart` (`AgeStart`),
-  KEY `idx_advertisement_ageEnd` (`AgeEnd`),
-  KEY `idx_advertisement_gender` (`Gender`),
-  CONSTRAINT `advertisement_chk_1` CHECK (((`AgeStart` >= 1) and (`AgeStart` <= 100))),
-  CONSTRAINT `advertisement_chk_2` CHECK (((`AgeEnd` >= 1) and (`AgeEnd` <= 100))),
-  CONSTRAINT `chk_gender` CHECK ((`Gender` in (_utf8mb4'M',_utf8mb4'F',NULL)))
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+                                 `id`           INT          NOT NULL AUTO_INCREMENT,
+                                 `title`        VARCHAR(255) NOT NULL,
+                                 `start_at`     DATETIME     NOT NULL,
+                                 `end_at`       DATETIME     NOT NULL,
+                                 `age_start`    INT                  DEFAULT NULL,
+                                 `age_end`      INT                  DEFAULT NULL,
+                                 `gender`       ENUM ('F', 'M', 'B') DEFAULT NULL,
+                                 `status`       BOOLEAN      NOT NULL,
+                                 `created_date` TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
+                                 `updated_date` TIMESTAMP            DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                 PRIMARY KEY (`id`),
+                                 KEY `idx_advertisement_age` (`age_start`, `age_end`),
+                                 KEY `idx_advertisement_gender` (`gender`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `country`;
-
 CREATE TABLE `country`
 (
-    `CountryCode` char(2) NOT NULL,
-    PRIMARY KEY (`CountryCode`)
+    `country_code` CHAR(2) NOT NULL,
+    PRIMARY KEY (`country_code`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
-
-INSERT INTO `country` (`CountryCode`)
-VALUES ('US'), -- United States
-       ('CA'), -- Canada
-       ('TW'), -- Taiwan
-       ('JP'); -- Japan
 
 DROP TABLE IF EXISTS `platform`;
-
 CREATE TABLE `platform`
 (
-    `PlatformName` varchar(50) NOT NULL,
-    PRIMARY KEY (`PlatformName`)
+    `platform_name` VARCHAR(50) NOT NULL,
+    PRIMARY KEY (`platform_name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT INTO `platform` (`PlatformName`)
+DROP TABLE IF EXISTS `advertisement_country`;
+CREATE TABLE `advertisement_country` (
+                                         `advertisement_id` INT     NOT NULL,
+                                         `country_code`     CHAR(2) NOT NULL,
+                                         PRIMARY KEY (`advertisement_id`, `country_code`),
+                                         KEY `idx_ad_country` (`country_code`, `advertisement_id`),
+                                         CONSTRAINT `advertisement_country_fk_advertisement` FOREIGN KEY (`advertisement_id`) REFERENCES `advertisement` (`id`) ON DELETE CASCADE,
+                                         CONSTRAINT `advertisement_country_fk_country` FOREIGN KEY (`country_code`) REFERENCES `country` (`country_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `advertisement_platform`;
+CREATE TABLE `advertisement_platform` (
+                                          `advertisement_id` INT         NOT NULL,
+                                          `platform_name`    VARCHAR(50) NOT NULL,
+                                          PRIMARY KEY (`advertisement_id`, `platform_name`),
+                                          KEY `idx_ad_platform` (`platform_name`, `advertisement_id`),
+                                          CONSTRAINT `advertisement_platform_fk_advertisement` FOREIGN KEY (`advertisement_id`) REFERENCES `advertisement` (`id`) ON DELETE CASCADE,
+                                          CONSTRAINT `advertisement_platform_fk_platform` FOREIGN KEY (`platform_name`) REFERENCES `platform` (`platform_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `platform` (`platform_name`)
 VALUES ('web'),     -- Web platform
        ('android'), -- Android platform
        ('ios'); -- IOS platform
 
-DROP TABLE IF EXISTS `advertisement_country`;
-
-CREATE TABLE `advertisement_country` (
-  `advertisement_id` int NOT NULL,
-  `country_code` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`advertisement_id`,`country_code`),
-  KEY `CountryCode` (`country_code`),
-  CONSTRAINT `advertisement_country_ibfk_1` FOREIGN KEY (`advertisement_id`) REFERENCES `advertisement` (`ID`),
-  CONSTRAINT `advertisement_country_ibfk_2` FOREIGN KEY (`country_code`) REFERENCES `country` (`CountryCode`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-DROP TABLE IF EXISTS `advertisement_platform`;
-
-CREATE TABLE `advertisement_platform` (
-  `advertisement_id` int NOT NULL,
-  `platform_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`advertisement_id`,`platform_name`),
-  KEY `PlatformName` (`platform_name`),
-  CONSTRAINT `advertisement_platform_ibfk_1` FOREIGN KEY (`advertisement_id`) REFERENCES `advertisement` (`ID`),
-  CONSTRAINT `advertisement_platform_ibfk_2` FOREIGN KEY (`platform_name`) REFERENCES `platform` (`PlatformName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+INSERT INTO `country` (`country_code`)
+VALUES ('US'), -- United States
+       ('CA'), -- Canada
+       ('TW'), -- Taiwan
+       ('JP'); -- Japan
