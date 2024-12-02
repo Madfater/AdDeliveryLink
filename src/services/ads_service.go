@@ -7,6 +7,7 @@ import (
 	"github.com/Madfater/AdDeliveryLink/entity"
 	"github.com/Madfater/AdDeliveryLink/enum"
 	"github.com/Madfater/AdDeliveryLink/repositories"
+	"github.com/Madfater/AdDeliveryLink/utils"
 	"time"
 )
 
@@ -41,8 +42,12 @@ func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) error {
 		AgeStart: ageStart,
 		AgeEnd:   ageEnd,
 		Gender:   req.Conditions.Gender,
-		Country:  convertToCountries(req.Conditions.Country),
-		Platform: convertToPlatforms(req.Conditions.Platform),
+		Country: utils.ConvertToEntity(req.Conditions.Country, func(name enum.CountryCode) entity.Country {
+			return entity.Country{CountryCode: name}
+		}),
+		Platform: utils.ConvertToEntity(req.Conditions.Platform, func(name enum.Platform) entity.Platform {
+			return entity.Platform{PlatformName: name}
+		}),
 	}
 
 	if err := s.repo.Create(&ad); err != nil {
@@ -87,20 +92,4 @@ func (s *adsService) GetAdvertisements(query data.GetAdsReq) ([]data.GetAdsResp,
 		})
 	}
 	return responses, nil
-}
-
-func convertToPlatforms(platformNames []enum.Platform) []entity.Platform {
-	var platforms []entity.Platform
-	for _, name := range platformNames {
-		platforms = append(platforms, entity.Platform{PlatformName: name})
-	}
-	return platforms
-}
-
-func convertToCountries(platformNames []enum.CountryCode) []entity.Country {
-	var countries []entity.Country
-	for _, name := range platformNames {
-		countries = append(countries, entity.Country{CountryCode: name})
-	}
-	return countries
 }
