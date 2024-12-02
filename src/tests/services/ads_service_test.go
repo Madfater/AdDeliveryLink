@@ -8,6 +8,7 @@ import (
 	"github.com/Madfater/AdDeliveryLink/enum"
 	"github.com/Madfater/AdDeliveryLink/services"
 	"github.com/stretchr/testify/mock"
+	"reflect"
 	"testing"
 	"time"
 )
@@ -66,9 +67,12 @@ func TestCreateAdvertisement(t *testing.T) {
 		mockRepo.On("Create", mock.Anything).Return(nil)
 
 		// 調用 Service
-		err := service.CreateAdvertisement(req)
+		response, err := service.CreateAdvertisement(req)
 
 		// 驗證行為
+		if response.Result.Title != "Test Ad" || response.Result.Gender != "F" || response.Result.Platform[0].PlatformName != enum.IOS || response.Result.Country[0].CountryCode != enum.US {
+			t.Errorf("unexpected response: %v", response)
+		}
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -91,11 +95,11 @@ func TestCreateAdvertisement(t *testing.T) {
 		mockRepo.On("Create", mock.Anything).Return(errors.New("repository error"))
 
 		// 調用 Service
-		err := service.CreateAdvertisement(req)
+		_, err := service.CreateAdvertisement(req)
 
 		// 驗證行為
-		if err == nil || err.Error() != "failed to create advertisement: repository error" {
-			t.Errorf("expected repository error, got %v", err)
+		if err == nil || err.Error() != "repository error" {
+			t.Errorf("expected repository error, got %v", err.Error())
 		}
 	})
 }
@@ -128,7 +132,7 @@ func TestGetAdvertisements(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
-		if len(results) != 2 || results[0].Title != "Ad 1" {
+		if len(results.Result.Ads) != 2 || results.Result.Ads[0].Title != "Ad 1" {
 			t.Errorf("unexpected results: %v", results)
 		}
 
@@ -149,7 +153,7 @@ func TestGetAdvertisements(t *testing.T) {
 		if err == nil || err.Error() != "repository error" {
 			t.Errorf("expected repository error, got %v", err)
 		}
-		if results != nil {
+		if !reflect.DeepEqual(results, data.GenericResponse[data.GetAdsResp]{}) {
 			t.Errorf("expected nil results, got %v", results)
 		}
 	})

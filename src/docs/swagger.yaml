@@ -43,12 +43,78 @@ definitions:
       - startAt
       - title
     type: object
+  data.GenericResponse-data_GetAdsResp:
+    properties:
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/data.GetAdsResp'
+      status:
+        type: string
+    type: object
+  data.GenericResponse-entity_Advertisement:
+    properties:
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/entity.Advertisement'
+      status:
+        type: string
+    type: object
   data.GetAdsResp:
+    properties:
+      ads:
+        items:
+          $ref: '#/definitions/data.GetAdsRespItem'
+        type: array
+    type: object
+  data.GetAdsRespItem:
     properties:
       EndAt:
         type: string
       Title:
         type: string
+    type: object
+  entity.Advertisement:
+    properties:
+      ageEnd:
+        type: integer
+      ageStart:
+        type: integer
+      country:
+        items:
+          $ref: '#/definitions/entity.Country'
+        type: array
+      createdDate:
+        type: string
+      endAt:
+        type: string
+      gender:
+        $ref: '#/definitions/enum.Gender'
+      id:
+        type: integer
+      platform:
+        items:
+          $ref: '#/definitions/entity.Platform'
+        type: array
+      startAt:
+        type: string
+      status:
+        type: boolean
+      title:
+        type: string
+      updatedDate:
+        type: string
+    type: object
+  entity.Country:
+    properties:
+      countryCode:
+        $ref: '#/definitions/enum.CountryCode'
+    type: object
+  entity.Platform:
+    properties:
+      platformName:
+        $ref: '#/definitions/enum.Platform'
     type: object
   enum.CountryCode:
     enum:
@@ -104,7 +170,6 @@ paths:
           - TW
         in: query
         name: country
-        required: true
         type: string
         x-enum-varnames:
           - CN
@@ -117,7 +182,6 @@ paths:
         - B
         in: query
         name: gender
-        required: true
         type: string
         x-enum-varnames:
           - Male
@@ -138,7 +202,6 @@ paths:
         - web
         in: query
         name: platform
-        required: true
         type: string
         x-enum-varnames:
           - Android
@@ -148,9 +211,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/data.GetAdsResp'
-            type: array
+            $ref: '#/definitions/data.GenericResponse-data_GetAdsResp'
         "400":
           description: Bad Request
       tags:
@@ -168,6 +229,8 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/data.GenericResponse-entity_Advertisement'
         "400":
           description: Bad Request
       tags:

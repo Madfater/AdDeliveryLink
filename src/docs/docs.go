@@ -44,8 +44,7 @@ const docTemplate = `{
                             "TW"
                         ],
                         "name": "country",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "enum": [
@@ -60,8 +59,7 @@ const docTemplate = `{
                             "Both"
                         ],
                         "name": "gender",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "maximum": 100,
@@ -89,18 +87,14 @@ const docTemplate = `{
                             "Web"
                         ],
                         "name": "platform",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/data.GetAdsResp"
-                            }
+                            "$ref": "#/definitions/data.GenericResponse-data_GetAdsResp"
                         }
                     },
                     "400": {
@@ -126,7 +120,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/data.GenericResponse-entity_Advertisement"
+                        }
                     },
                     "400": {
                         "description": "Bad Request"
@@ -196,7 +193,46 @@ const docTemplate = `{
                 }
             }
         },
+        "data.GenericResponse-data_GetAdsResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/data.GetAdsResp"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.GenericResponse-entity_Advertisement": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/entity.Advertisement"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
         "data.GetAdsResp": {
+            "type": "object",
+            "properties": {
+                "ads": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/data.GetAdsRespItem"
+                    }
+                }
+            }
+        },
+        "data.GetAdsRespItem": {
             "type": "object",
             "properties": {
                 "EndAt": {
@@ -204,6 +240,69 @@ const docTemplate = `{
                 },
                 "Title": {
                     "type": "string"
+                }
+            }
+        },
+        "entity.Advertisement": {
+            "type": "object",
+            "properties": {
+                "ageEnd": {
+                    "type": "integer"
+                },
+                "ageStart": {
+                    "type": "integer"
+                },
+                "country": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Country"
+                    }
+                },
+                "createdDate": {
+                    "type": "string"
+                },
+                "endAt": {
+                    "type": "string"
+                },
+                "gender": {
+                    "$ref": "#/definitions/enum.Gender"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "platform": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Platform"
+                    }
+                },
+                "startAt": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedDate": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.Country": {
+            "type": "object",
+            "properties": {
+                "countryCode": {
+                    "$ref": "#/definitions/enum.CountryCode"
+                }
+            }
+        },
+        "entity.Platform": {
+            "type": "object",
+            "properties": {
+                "platformName": {
+                    "$ref": "#/definitions/enum.Platform"
                 }
             }
         },

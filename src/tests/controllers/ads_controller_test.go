@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/Madfater/AdDeliveryLink/controllers"
 	"github.com/Madfater/AdDeliveryLink/controllers/data"
+	"github.com/Madfater/AdDeliveryLink/entity"
 	"github.com/Madfater/AdDeliveryLink/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/mock"
@@ -19,14 +20,18 @@ type MockAdsService struct {
 	mock.Mock
 }
 
-func (m *MockAdsService) CreateAdvertisement(req data.CreateAdsReq) error {
+func (m *MockAdsService) CreateAdvertisement(req data.CreateAdsReq) (data.GenericResponse[entity.Advertisement], error) {
 	args := m.Called(req)
-	return args.Error(0)
+
+	// 使用 args.Get(0) 確保回傳的泛型類型正確
+	response, _ := args.Get(0).(data.GenericResponse[entity.Advertisement])
+
+	return response, args.Error(1)
 }
 
-func (m *MockAdsService) GetAdvertisements(req data.GetAdsReq) ([]data.GetAdsResp, error) {
-	args := m.Called(req)
-	return args.Get(0).([]data.GetAdsResp), args.Error(1)
+func (m *MockAdsService) GetAdvertisements(query data.GetAdsReq) (data.GenericResponse[data.GetAdsResp], error) {
+	args := m.Called(query)
+	return args.Get(0).(data.GenericResponse[data.GetAdsResp]), args.Error(1)
 }
 
 func TestCreateAdvertisement(t *testing.T) {
@@ -38,7 +43,16 @@ func TestCreateAdvertisement(t *testing.T) {
 	t.Run("success case", func(t *testing.T) {
 		// Mock Service
 		mockService := new(MockAdsService)
-		mockService.On("CreateAdvertisement", mock.Anything).Return(nil)
+		mockResponse := data.GenericResponse[entity.Advertisement]{
+			Status:  "success",
+			Message: "Advertisement created successfully",
+			Result: entity.Advertisement{
+				Title:   "Ad Title",
+				StartAt: time.Date(2024, time.January, 1, 0, 0, 0, 0, time.UTC),
+				EndAt:   time.Date(2024, time.January, 31, 0, 0, 0, 0, time.UTC),
+			},
+		}
+		mockService.On("CreateAdvertisement", mock.Anything).Return(mockResponse, nil)
 
 		controller := controllers.NewAdsController(mockService)
 
@@ -57,6 +71,7 @@ func TestCreateAdvertisement(t *testing.T) {
 		if w.Code != http.StatusOK {
 			t.Errorf("expected status 200 but got %d", w.Code)
 		}
+
 		mockService.AssertCalled(t, "CreateAdvertisement", mock.Anything)
 	})
 
@@ -74,6 +89,7 @@ func TestCreateAdvertisement(t *testing.T) {
 
 		controller.CreateAdvertisement(c)
 
+		// 斷言
 		if w.Code != http.StatusBadRequest {
 			t.Errorf("expected status 400 but got %d", w.Code)
 		}
@@ -89,11 +105,17 @@ func TestGetAdvertisement(t *testing.T) {
 	t.Run("success case", func(t *testing.T) {
 		// Mock Service
 		mockService := new(MockAdsService)
-		mockResult := []data.GetAdsResp{
-			{Title: "Ad Title 1", EndAt: time.Date(2024, time.January, 31, 0, 0, 0, 0, time.UTC)},
-			{Title: "Ad Title 2", EndAt: time.Date(2024, time.February, 28, 0, 0, 0, 0, time.UTC)},
+		mockResponse := data.GenericResponse[data.GetAdsResp]{
+			Status:  "success",
+			Message: "Advertisements fetched successfully",
+			Result: data.GetAdsResp{
+				Ads: []data.GetAdsRespItem{
+					{Title: "Ad Title 1", EndAt: time.Date(2024, time.January, 31, 0, 0, 0, 0, time.UTC)},
+					{Title: "Ad Title 2", EndAt: time.Date(2024, time.February, 28, 0, 0, 0, 0, time.UTC)},
+				},
+			},
 		}
-		mockService.On("GetAdvertisements", mock.Anything).Return(mockResult, nil)
+		mockService.On("GetAdvertisements", mock.Anything).Return(mockResponse, nil)
 
 		controller := controllers.NewAdsController(mockService)
 
@@ -105,6 +127,7 @@ func TestGetAdvertisement(t *testing.T) {
 
 		controller.GetAdvertisement(c)
 
+		// 斷言
 		if w.Code != http.StatusOK {
 			t.Errorf("expected status 200 but got %d", w.Code)
 		}
@@ -113,10 +136,16 @@ func TestGetAdvertisement(t *testing.T) {
 
 	t.Run("error case", func(t *testing.T) {
 		mockService := new(MockAdsService)
-		mockService.On("GetAdvertisements", mock.Anything).Return([]data.GetAdsResp{}, errors.New("database error"))
+		mockResponse := data.GenericResponse[data.GetAdsResp]{
+			Status:  "error",
+			Message: "Failed to fetch advertisements",
+			Result:  data.GetAdsResp{},
+		}
+		mockService.On("GetAdvertisements", mock.Anything).Return(mockResponse, errors.New("database error"))
 
 		controller := controllers.NewAdsController(mockService)
 
+		// 測試請求
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)
 
@@ -124,6 +153,7 @@ func TestGetAdvertisement(t *testing.T) {
 
 		controller.GetAdvertisement(c)
 
+		// 斷言
 		if w.Code != http.StatusInternalServerError {
 			t.Errorf("expected status 500 but got %d", w.Code)
 		}
