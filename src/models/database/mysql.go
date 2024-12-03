@@ -2,7 +2,8 @@ package database
 
 import (
 	"fmt"
-	"log"
+	"github.com/Madfater/AdDeliveryLink/log"
+	"gorm.io/gorm/logger"
 	"os"
 	"time"
 
@@ -20,11 +21,14 @@ func (m *MySQL) Connect() (*gorm.DB, error) {
 	port := os.Getenv("MYSQL_PORT")
 	dbName := os.Getenv("MYSQL_DATABASE")
 
+	_ = log.GetLogger()
+	gormLogger := log.NewGormLogger(logger.Info)
+
 	dsn := fmt.Sprintf("%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, ip, port, dbName)
-	log.Println(dsn)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
 		PrepareStmt:            true,
+		Logger:                 gormLogger,
 	})
 	if err != nil {
 		return nil, err
