@@ -11,12 +11,16 @@ services:
       MYSQL_PORT: 3306
       MYSQL_DATABASE: AdDeliveryLink
       REDIS_IP: redis
+      LOGSTASH_URL: http://logstash:5000
     ports:
       - "8080:8080"
     depends_on:
       - db
       - redis
+      - logstash
     restart: always
+    volumes:
+      - logs:/root/logs
 
   db:
     build:
@@ -39,8 +43,41 @@ services:
     ports:
       - "6379:6379"
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.10.1
+    user: "0:0"
+    container_name: logstash
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - logs:/logs
+    ports:
+      - "9600:9600"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.1
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+
 volumes:
   redis-data:
   db-db:
   db-conf:
   db-logs:
+  elasticsearch-data:
+  logs:
