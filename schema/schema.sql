@@ -4,15 +4,14 @@ CREATE TABLE `advertisement` (
                                  `title`        VARCHAR(255) NOT NULL,
                                  `start_at`     DATETIME     NOT NULL,
                                  `end_at`       DATETIME     NOT NULL,
-                                 `age_start`    INT                  DEFAULT NULL,
-                                 `age_end`      INT                  DEFAULT NULL,
-                                 `gender`       ENUM ('F', 'M', 'B') DEFAULT NULL,
+                                 `age_start` INT NOT NULL,
+                                 `age_end`   INT NOT NULL,
+                                 `gender`    ENUM ('F', 'M', 'B') DEFAULT 'B',
                                  `status`       BOOLEAN      NOT NULL,
                                  `created_date` TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
                                  `updated_date` TIMESTAMP            DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                  PRIMARY KEY (`id`),
-                                 KEY `idx_advertisement_age` (`age_start`, `age_end`),
-                                 KEY `idx_advertisement_gender` (`gender`)
+                                 KEY `idx_advertisements` (gender, status, age_start, age_end, start_at, end_at)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4

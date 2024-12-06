@@ -3,7 +3,7 @@ package enum
 type CountryCode string
 
 const (
-	CN CountryCode = "CN"
+	CN CountryCode = "CA"
 	US CountryCode = "US"
 	JP CountryCode = "JP"
 	TW CountryCode = "TW"

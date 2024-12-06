@@ -2,38 +2,115 @@
 
 ## 問題陳述
 
-設計並實現一個簡化的廣告投放服務，這個服務將提供兩個主要的 API：
+這是一個練習的專案
 
-admin API：用於創建廣告並設定廣告的條件
+設計並實現一個簡化的廣告投放服務，這個服務將提供兩個主要功能：
 
-public API：用於根據特定條件列出符合條件的廣告
+1. 用於廣告商上架廣告
+    - 可以設定投放目標的屬性(年齡、性別、使用平台、國家)
+    - 可以設定廣告的開始時間及結束時間
+2. 用於用戶端取得廣告
+    - 根據用戶的條件取得相符的廣告
 
-## 解決方案概述
+## 功能列表
 
-- 創建一個資料庫
+### 目前已實現
 
-  - 將 condition 中的可複數資料的資料使用多對多的模式進行儲存
-  - 其他皆為一般的 attribute 儲存在同一個資料表
+- 按照 SOLID 原則設計整個系統架構
+- 使用 Gin gorm 完成主要功能
+- 使用 redis 作為 cache
+- 設定 Docker 架構以及 Github Action CI 的功能
+- 使用 Elastic Stack 實作 log 線上日誌
+    - 目前實作方式是先將 log 寫到本地 log file 再使用 LogStack 傳到 ES 整理供 Kibana 使用
+    - 還須評估這樣實作是否有風險
 
-- admin API：將根據用戶提供的資料，生成廣告並將其存儲到資料庫中
+### TODO List
 
-  - 假設用戶並未輸入，使用預設值進行儲存
-  - Gender：以 F 及 M 分別代表女性及男性。預設值將為 NULL 以代表皆可
-  - Age：有區間故使用 AgeStart、AgeEnd 區分上下限。預設值分別為 1 以及 100
-  - Platform、Country：使用多對多的模式進行儲存。預設將不會儲存於聯合資料表中
+#### feature:
 
-- public API：將接收用戶的查詢，根據查詢條件從資料庫中檢索符合條件的廣告並返回給用戶
+- 資料匯入匯出
+- 定期過期廣告 (每日 check)
+- 定期清除過期廣告 (每個季度或半年清理資料庫)
+- 重新實作 repository test (因為測虛擬的約等於沒用 orm)
+
+#### docs:
+
+- 流程圖等圖示
+
+## 使用方式
+
+- **_POST /ad_** 上架廣告
+    - conditions
+        - gender：Optional ， F、M、B。分別為男、女、全部。預設值將為 B
+        - age：Optional ，使用 AgeStart、AgeEnd 區分年齡段。預設值分別為 1 以及 100
+        - platform: required ，enum array ， enum: ios、android、web
+        - country: required ，enum array ， enum: JP、TW、CA、US
+    - endAt: required ，廣告的過期時間，格式為 2021-01-01T00:00:00Z
+    - StartAt: required ，廣告的開始投放時間，格式為 2021-01-01T00:00:00Z
+    - title: required ，廣告名稱
+
+```json
+//body
+{
+  "conditions": {
+    "ageEnd": 100,
+    "ageStart": 100,
+    "country": [
+      "CA"
+    ],
+    "gender": "M",
+    "platform": [
+      "android"
+    ]
+  },
+  "endAt": "2021-01-01T00:00:00Z",
+  "startAt": "2021-01-01T00:00:00Z",
+  "title": "string"
+}
+```
+
+- **_Get /ad_** 取得廣告
   - 除了 offset 以及 limit 皆為 optional
-  - 廣告為一個小時刷新過期時間，以免造成 Memory Cache 快速過期
+
+```
+//query
+/ad?age=?&country=?&gender=?&limit=?&offset=?&platform=?
+```
 
 ## 資料庫設計
 
-<div align=center>
-	<img src="./img/schema.png">
-	<img src="./img/ER_model.png">
-</div> 
- 
--	對 ID、AgeEnd、AgeStart、Gender 設置 index 提高搜尋速度
+```mermaid
+erDiagram
+    country {
+        string country_code PK
+    }
+
+    platform {
+        string platform_name PK
+    }
+
+    advertisement {
+        int id PK
+        string title
+        date end_at
+        int age_start
+        int age_end
+        string gender
+        bool status
+        timestamp updated_date
+        timestamp created_date
+    }
+
+    country ||--o{ advertisement: "on CountryCode"
+    platform ||--o{ advertisement: "on PlatformName"
+
+```
+
+- platform 和 country_code 是多對多的使用情境，當初為了擴充性選擇這樣設計。如果真的只有一個屬性可以考慮改為一個 table
+  存 ad id 以及 string 在程式上對能儲存的值進行限制，這樣在效能以及難度都會比較簡單。
+- 雖然目前還沒有這些功能，但考慮到修改的樂觀鎖或權限管理還是儲存了 updated_date 和 created_date。
+- status 是作為廣告過期的指標，第一是為了讓定期腳本進行清除，第二是為了搜尋時過濾過期的廣告加速搜尋速度。
+- 設計一個複合索引 (gender,status,age_start,age_end,start_at,end_at)，想法是會搜尋的條件中出現頻率越高且內容越複雜的放越前面，範圍搜尋放最後面。
 
 ## 技術選擇
 
@@ -42,6 +119,7 @@ public API：用於根據特定條件列出符合條件的廣告
 - [Go](https://go.dev)
 - [MySQL](https://www.mysql.com/)
 - [Redis](https://redis.io)
+- [ELK](https://www.elastic.co/elastic-stack)
 
 ### Library
 
@@ -51,13 +129,15 @@ public API：用於根據特定條件列出符合條件的廣告
 - [go-gorm/cache](https://github.com/go-gorm/caches)
 - [Validator](https://github.com/go-playground/validator)
 - [gin-swagger](https://github.com/swaggo/gin-swagger)
+- [logrus](https://github.com/sirupsen/logrus)
 
 ### 使用原因
 
-- Validator：它是用來驗證輸入的 Library。僅需要在 struct 中設定好限制就能方便的驗出錯誤
-- go-redis：redis 的客戶端
-- go-gorm/cache：Gorm 的 Plugin，只需實作 Get、Store 及 Invalidate，就能讓 Gorm 自行處裡 Memory cache 的邏輯。能使用上者實作，讓其變成使用 redis 作為快取伺服器
 - gin-swagger: API 文檔自動生成
+- Validator：是用來驗證輸入的 Library。在 struct 中設定限制就能檢驗錯誤
+- logrus: 簡單且結構化 log 工具
+- go-redis：redis 的客戶端
+- go-gorm/cache：Gorm 的 Plugin，使 Gorm 實作 memory cache。能使用 redis 作為載體。
 
 ## 流量測試
 
@@ -124,12 +204,16 @@ services:
       MYSQL_PORT: 3306
       MYSQL_DATABASE: AdDeliveryLink
       REDIS_IP: redis
+      LOGSTASH_URL: http://logstash:5000
     ports:
       - "8080:8080"
     depends_on:
       - db
       - redis
+      - logstash
     restart: always
+    volumes:
+      - logs:/root/logs
 
   db:
     image: ghcr.io/madfater/db:main
@@ -150,8 +234,41 @@ services:
     ports:
       - "6379:6379"
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.10.1
+    user: "0:0"
+    container_name: logstash
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - logs:/logs
+    ports:
+      - "9600:9600"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.1
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+
 volumes:
   redis-data:
   db-db:
   db-conf:
   db-logs:
+  elasticsearch-data:
+  logs:

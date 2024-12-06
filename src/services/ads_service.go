@@ -26,12 +26,16 @@ func NewAdsService(repo repositories.AdsRepository) AdsService {
 func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) (data.GenericResponse[entity.Advertisement], error) {
 	ageStart := 1
 	ageEnd := 100
+	gender := enum.Gender(`B`)
 
 	if req.Conditions.AgeStart != nil {
 		ageStart = *req.Conditions.AgeStart
 	}
 	if req.Conditions.AgeEnd != nil {
 		ageEnd = *req.Conditions.AgeEnd
+	}
+	if req.Conditions.Gender != "" {
+		gender = req.Conditions.Gender
 	}
 
 	ad := entity.Advertisement{
@@ -40,7 +44,7 @@ func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) (data.GenericRes
 		EndAt:    req.EndAt,
 		AgeStart: ageStart,
 		AgeEnd:   ageEnd,
-		Gender:   req.Conditions.Gender,
+		Gender:   gender,
 		Country: utils.SliceConvertor(req.Conditions.Country, func(name enum.CountryCode) entity.Country {
 			return entity.Country{CountryCode: name}
 		}),

@@ -24,25 +24,6 @@ import (
 // @description a simple API for advertisement
 
 // @BasePath /v1/api
-
-// feature
-// TODO: 資料匯入匯出
-// TODO: 定期過期廣告
-// TODO: 定期清除過期廣告
-// TODO: 重新實作 repository test(因為測虛擬的約等於沒用 orm)
-
-// redis
-// TODO: 實作 緩存預熱
-// TODO: 評估是否有緩存異常
-
-// docs
-// TODO: 重新設定 swagger
-// TODO: 修改 readme
-// TODO: 流程圖等圖
-
-// log
-// TODO: 實作 log 機制
-// TODO: logstash + ES
 func main() {
 	gin.DisableConsoleColor()
 
