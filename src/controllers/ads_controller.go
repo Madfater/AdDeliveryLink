@@ -4,7 +4,6 @@ import (
 	"github.com/Madfater/AdDeliveryLink/controllers/data"
 	"github.com/Madfater/AdDeliveryLink/log"
 	"github.com/Madfater/AdDeliveryLink/services"
-	"github.com/Madfater/AdDeliveryLink/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"net/http"
@@ -29,7 +28,7 @@ func (ctrl *AdsController) CreateAdvertisement(c *gin.Context) {
 	var body data.CreateAdsReq
 
 	if err := c.ShouldBindBodyWith(&body, binding.JSON); err != nil {
-		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid request body", err)
+		log.ErrorResponse(c, http.StatusBadRequest, "Invalid request body", err)
 		return
 	}
 
@@ -43,11 +42,11 @@ func (ctrl *AdsController) CreateAdvertisement(c *gin.Context) {
 
 	response, err := ctrl.service.CreateAdvertisement(body)
 	if err != nil {
-		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to create advertisement", err)
+		log.ErrorResponse(c, http.StatusInternalServerError, "Failed to create advertisement", err)
 		return
 	}
 
-	utils.SuccessResponse(c, response)
+	log.SuccessResponse(c, response)
 }
 
 // GetAdvertisement @Summary Gets a list of advertisements
@@ -61,7 +60,7 @@ func (ctrl *AdsController) GetAdvertisement(c *gin.Context) {
 	var query data.GetAdsReq
 
 	if err := c.ShouldBindQuery(&query); err != nil {
-		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid query parameters", err)
+		log.ErrorResponse(c, http.StatusBadRequest, "Invalid query parameters", err)
 		return
 	}
 
@@ -75,9 +74,9 @@ func (ctrl *AdsController) GetAdvertisement(c *gin.Context) {
 
 	result, err := ctrl.service.GetAdvertisements(query)
 	if err != nil {
-		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to fetch advertisements", err)
+		log.ErrorResponse(c, http.StatusInternalServerError, "Failed to fetch advertisements", err)
 		return
 	}
 
-	utils.SuccessResponse(c, result)
+	log.SuccessResponse(c, result)
 }

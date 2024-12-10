@@ -1,15 +1,14 @@
-package utils
+package log
 
 import (
 	"github.com/Madfater/AdDeliveryLink/controllers/data"
-	"github.com/Madfater/AdDeliveryLink/log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func SuccessResponse[T any](c *gin.Context, data data.GenericResponse[T]) {
-	logger := log.GetLogger()
+func SuccessResponse[T any](c *gin.Context, data data.IResponse[T]) {
+	logger := GetLogger()
 	logger.Info("Request Finished", map[string]interface{}{
 		"method":     c.Request.Method,
 		"path":       c.Request.URL.Path,
@@ -20,7 +19,7 @@ func SuccessResponse[T any](c *gin.Context, data data.GenericResponse[T]) {
 }
 
 func ErrorResponse(c *gin.Context, httpStatus int, message string, err error) {
-	logger := log.GetLogger()
+	logger := GetLogger()
 	logger.Error("Request Failed", map[string]interface{}{
 		"method":     c.Request.Method,
 		"path":       c.Request.URL.Path,
@@ -30,5 +29,13 @@ func ErrorResponse(c *gin.Context, httpStatus int, message string, err error) {
 	c.JSON(httpStatus, gin.H{
 		"status":  "error",
 		"message": message,
+		"err":     err.Error(),
+	})
+}
+
+func HandleError(err error, msg string) {
+	logger := GetLogger()
+	logger.Error(msg, map[string]interface{}{
+		"err": err.Error(),
 	})
 }

@@ -22,7 +22,7 @@ func (m *MySQL) Connect() (*gorm.DB, error) {
 	dbName := os.Getenv("MYSQL_DATABASE")
 
 	_ = log.GetLogger()
-	gormLogger := log.NewGormLogger(logger.Info)
+	gormLogger := NewGormLogger(logger.Info)
 
 	dsn := fmt.Sprintf("%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, ip, port, dbName)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{

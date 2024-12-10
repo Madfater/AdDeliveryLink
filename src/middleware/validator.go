@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/Madfater/AdDeliveryLink/controllers/data"
-	"github.com/Madfater/AdDeliveryLink/utils"
+	"github.com/Madfater/AdDeliveryLink/log"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"net/http"
@@ -18,7 +18,7 @@ func NewValidator[T data.IRequest](requestType T) *RequestValidator[T] {
 
 func (v *RequestValidator[T]) GetBodyValidator(c *gin.Context) {
 	if err := c.ShouldBindBodyWith(&v.requestType, binding.JSON); err != nil {
-		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid request body", err)
+		log.ErrorResponse(c, http.StatusBadRequest, "Invalid request body", err)
 		c.Abort()
 		return
 	}
@@ -28,7 +28,7 @@ func (v *RequestValidator[T]) GetBodyValidator(c *gin.Context) {
 
 func (v *RequestValidator[T]) GetQueryValidator(c *gin.Context) {
 	if err := c.ShouldBindQuery(&v.requestType); err != nil {
-		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid query parameters", err)
+		log.ErrorResponse(c, http.StatusBadRequest, "Invalid query parameters", err)
 		c.Abort()
 		return
 	}
@@ -38,7 +38,7 @@ func (v *RequestValidator[T]) GetQueryValidator(c *gin.Context) {
 
 func (v *RequestValidator[T]) validate(c *gin.Context) {
 	if isValid, err := v.requestType.Validate(); err != nil && !isValid {
-		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid content", err)
+		log.ErrorResponse(c, http.StatusBadRequest, "Invalid content", err)
 		c.Abort()
 		return
 	}

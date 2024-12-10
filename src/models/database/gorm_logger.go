@@ -1,8 +1,9 @@
-package log
+package database
 
 import (
 	"context"
 	"fmt"
+	"github.com/Madfater/AdDeliveryLink/log"
 
 	"gorm.io/gorm/logger"
 	"time"
@@ -29,21 +30,21 @@ func (l *GormLogger) LogMode(level logger.LogLevel) logger.Interface {
 // Info 記錄 Info 級別日誌
 func (l *GormLogger) Info(ctx context.Context, msg string, data ...interface{}) {
 	if l.logLevel >= logger.Info {
-		GetLogger()
+		log.GetLogger()
 	}
 }
 
 // Warn 記錄 Warn 級別日誌
 func (l *GormLogger) Warn(ctx context.Context, msg string, data ...interface{}) {
 	if l.logLevel >= logger.Warn {
-		GetLogger().Warn(fmt.Sprintf(msg, data...), nil)
+		log.GetLogger().Warn(fmt.Sprintf(msg, data...), nil)
 	}
 }
 
 // Error 記錄 Error 級別日誌
 func (l *GormLogger) Error(ctx context.Context, msg string, data ...interface{}) {
 	if l.logLevel >= logger.Error {
-		GetLogger().Error(fmt.Sprintf(msg, data...), nil)
+		log.GetLogger().Error(fmt.Sprintf(msg, data...), nil)
 	}
 }
 
@@ -65,11 +66,11 @@ func (l *GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (stri
 
 	if err != nil {
 		fields["error"] = err
-		GetLogger().Error("SQL execution failed", fields)
+		log.GetLogger().Error("SQL execution failed", fields)
 		return
 	}
 
 	if l.logLevel >= logger.Info {
-		GetLogger().Info("SQL executed successfully", fields)
+		log.GetLogger().Info("SQL executed successfully", fields)
 	}
 }
