@@ -9,14 +9,9 @@ import (
 	"github.com/Madfater/AdDeliveryLink/models"
 	"github.com/Madfater/AdDeliveryLink/repositories"
 	"github.com/Madfater/AdDeliveryLink/services"
-	"github.com/Madfater/AdDeliveryLink/utils"
+	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"io"
-	"net/http"
-	"os"
-
-	"github.com/gin-gonic/gin"
 )
 
 // @title Advertisement API
@@ -27,28 +22,22 @@ import (
 func main() {
 	gin.DisableConsoleColor()
 
-	f, _ := os.Create("gin.log")
-
 	r := gin.New()
-	r.Use(CustomRecovery())
-	r.Use(gin.LoggerWithWriter(io.MultiWriter(f)))
 
-	logger := log.GetLogger()
+	//設定 middleware
 	r.Use(middleware.CustomRecovery())
 	middleware.RegisterCustomValidation()
 
 	appCtx, err := models.CreateAppContext("mysql", "redis")
-	utils.HandleError(err, "Fail to create application context")
+	log.HandleError(err, "Fail to create application context")
 	defer appCtx.Close()
 
+	//依賴注入
 	adsRepo := repositories.NewAdsRepository(appCtx.DB)
 	adsService := services.NewAdsService(adsRepo)
-
 	adsController := controllers.NewAdsController(adsService)
 
-	validator := utils.NewValidationRegistrant()
-	validator.RegisterEnum()
-
+	logger := log.GetLogger()
 	logger.Info("Application start", map[string]interface{}{})
 
 	route := r.Group("/v1/api")
