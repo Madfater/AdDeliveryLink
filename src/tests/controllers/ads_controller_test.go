@@ -5,7 +5,7 @@ import (
 	"github.com/Madfater/AdDeliveryLink/controllers"
 	"github.com/Madfater/AdDeliveryLink/controllers/data"
 	"github.com/Madfater/AdDeliveryLink/entity"
-	"github.com/Madfater/AdDeliveryLink/utils"
+	"github.com/Madfater/AdDeliveryLink/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/mock"
 	"net/http"
@@ -20,30 +20,29 @@ type MockAdsService struct {
 	mock.Mock
 }
 
-func (m *MockAdsService) CreateAdvertisement(req data.CreateAdsReq) (data.GenericResponse[entity.Advertisement], error) {
+func (m *MockAdsService) CreateAdvertisement(req data.CreateAdsReq) (data.IResponse[entity.Advertisement], error) {
 	args := m.Called(req)
 
 	// 使用 args.Get(0) 確保回傳的泛型類型正確
-	response, _ := args.Get(0).(data.GenericResponse[entity.Advertisement])
+	response, _ := args.Get(0).(data.IResponse[entity.Advertisement])
 
 	return response, args.Error(1)
 }
 
-func (m *MockAdsService) GetAdvertisements(query data.GetAdsReq) (data.GenericResponse[data.GetAdsResp], error) {
+func (m *MockAdsService) GetAdvertisements(query data.GetAdsReq) (data.IResponse[data.GetAdsResp], error) {
 	args := m.Called(query)
-	return args.Get(0).(data.GenericResponse[data.GetAdsResp]), args.Error(1)
+	return args.Get(0).(data.IResponse[data.GetAdsResp]), args.Error(1)
 }
 
 func TestCreateAdvertisement(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
-	validator := utils.ValidationRegistrant{}
-	validator.RegisterEnum()
+	middleware.RegisterCustomValidation()
 
 	t.Run("success case", func(t *testing.T) {
 		// Mock Service
 		mockService := new(MockAdsService)
-		mockResponse := data.GenericResponse[entity.Advertisement]{
+		mockResponse := data.IResponse[entity.Advertisement]{
 			Status:  "success",
 			Message: "Advertisement created successfully",
 			Result: entity.Advertisement{
@@ -99,13 +98,12 @@ func TestCreateAdvertisement(t *testing.T) {
 func TestGetAdvertisement(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
-	validator := utils.ValidationRegistrant{}
-	validator.RegisterEnum()
+	middleware.RegisterCustomValidation()
 
 	t.Run("success case", func(t *testing.T) {
 		// Mock Service
 		mockService := new(MockAdsService)
-		mockResponse := data.GenericResponse[data.GetAdsResp]{
+		mockResponse := data.IResponse[data.GetAdsResp]{
 			Status:  "success",
 			Message: "Advertisements fetched successfully",
 			Result: data.GetAdsResp{
@@ -136,7 +134,7 @@ func TestGetAdvertisement(t *testing.T) {
 
 	t.Run("error case", func(t *testing.T) {
 		mockService := new(MockAdsService)
-		mockResponse := data.GenericResponse[data.GetAdsResp]{
+		mockResponse := data.IResponse[data.GetAdsResp]{
 			Status:  "error",
 			Message: "Failed to fetch advertisements",
 			Result:  data.GetAdsResp{},

@@ -153,7 +153,7 @@ func TestGetAdvertisements(t *testing.T) {
 		if err == nil || err.Error() != "repository error" {
 			t.Errorf("expected repository error, got %v", err)
 		}
-		if !reflect.DeepEqual(results, data.GenericResponse[data.GetAdsResp]{}) {
+		if !reflect.DeepEqual(results, data.IResponse[data.GetAdsResp]{}) {
 			t.Errorf("expected nil results, got %v", results)
 		}
 	})
