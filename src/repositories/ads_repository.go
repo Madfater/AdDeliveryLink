@@ -31,9 +31,8 @@ func (r *adsRepository) FindByCondition(filter dto.Filter, limit, offset int) ([
 
 	query.Where("advertisement.status = ?", true)
 
-	if gender := filter.Gender; gender != "" {
-		query.Where(r.db.Where("advertisement.Gender = ?", gender).Or("advertisement.Gender = B"))
-	}
+	gender := filter.Gender
+	query.Where(r.db.Where("advertisement.Gender = ?", gender).Or("advertisement.Gender = B"))
 
 	if platform := filter.Platform; platform != "" {
 		query.Where(r.db.Where("advertisement_platform.platform_name = ?", platform))
