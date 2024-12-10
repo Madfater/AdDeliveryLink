@@ -3,7 +3,7 @@ package enum
 type CountryCode string
 
 const (
-	CN CountryCode = "CA"
+	CA CountryCode = "CA"
 	US CountryCode = "US"
 	JP CountryCode = "JP"
 	TW CountryCode = "TW"
@@ -11,7 +11,7 @@ const (
 
 func (c CountryCode) IsValidEnum() bool {
 	switch c {
-	case CN, US, JP, TW:
+	case CA, US, JP, TW:
 		return true
 	}
 	return false
