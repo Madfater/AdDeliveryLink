@@ -45,10 +45,10 @@ func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) (data.IResponse[
 		AgeStart: ageStart,
 		AgeEnd:   ageEnd,
 		Gender:   gender,
-		Country: utils.SliceConvertor(req.Conditions.Country, func(name enum.CountryCode) entity.Country {
+		Country: utils.SliceMapper(req.Conditions.Country, func(name enum.CountryCode) entity.Country {
 			return entity.Country{CountryCode: name}
 		}),
-		Platform: utils.SliceConvertor(req.Conditions.Platform, func(name enum.Platform) entity.Platform {
+		Platform: utils.SliceMapper(req.Conditions.Platform, func(name enum.Platform) entity.Platform {
 			return entity.Platform{PlatformName: name}
 		}),
 	}
@@ -88,7 +88,7 @@ func (s *adsService) GetAdvertisements(query data.GetAdsReq) (data.IResponse[dat
 		return data.IResponse[data.GetAdsResp]{}, err
 	}
 
-	responseData := utils.SliceConvertor(results, func(result entity.Advertisement) data.GetAdsRespItem {
+	responseData := utils.SliceMapper(results, func(result entity.Advertisement) data.GetAdsRespItem {
 		return data.GetAdsRespItem{
 			Title: result.Title,
 			EndAt: result.EndAt,
