@@ -22,7 +22,7 @@ func NewAdsController(service services.AdsService) *AdsController {
 // @Description Creates a new advertisement with the specified title, start and end dates, and conditions.
 // @Param body body data.CreateAdsReq true "Advertisement information"
 // @Tags Advertisement
-// @Success 200 {object} data.GenericResponse[entity.Advertisement]
+// @Success 200 {object} data.IResponse[entity.Advertisement]
 // @Failure 400
 // @Router /ad [post]
 func (ctrl *AdsController) CreateAdvertisement(c *gin.Context) {
@@ -54,7 +54,7 @@ func (ctrl *AdsController) CreateAdvertisement(c *gin.Context) {
 // @Description Gets a list of advertisements that match the specified conditions.
 // @Param query query data.GetAdsReq true "Advertisement query parameters"
 // @Tags Advertisement
-// @Success 200 {object} data.GenericResponse[data.GetAdsResp]
+// @Success 200 {object} data.IResponse[data.GetAdsResp]
 // @Failure 400
 // @Router /ad [get]
 func (ctrl *AdsController) GetAdvertisement(c *gin.Context) {

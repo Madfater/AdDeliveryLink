@@ -8,11 +8,11 @@ import (
 	"net/http"
 )
 
-type RequestValidator[T data.ReqInterface] struct {
+type RequestValidator[T data.IRequest] struct {
 	requestType T
 }
 
-func NewValidator[T data.ReqInterface](requestType T) *RequestValidator[T] {
+func NewValidator[T data.IRequest](requestType T) *RequestValidator[T] {
 	return &RequestValidator[T]{requestType: requestType}
 }
 

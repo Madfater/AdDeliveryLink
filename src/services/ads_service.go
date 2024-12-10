@@ -11,8 +11,8 @@ import (
 )
 
 type AdsService interface {
-	CreateAdvertisement(req data.CreateAdsReq) (data.GenericResponse[entity.Advertisement], error)
-	GetAdvertisements(query data.GetAdsReq) (data.GenericResponse[data.GetAdsResp], error)
+	CreateAdvertisement(req data.CreateAdsReq) (data.IResponse[entity.Advertisement], error)
+	GetAdvertisements(query data.GetAdsReq) (data.IResponse[data.GetAdsResp], error)
 }
 
 type adsService struct {
@@ -23,7 +23,7 @@ func NewAdsService(repo repositories.AdsRepository) AdsService {
 	return &adsService{repo: repo}
 }
 
-func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) (data.GenericResponse[entity.Advertisement], error) {
+func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) (data.IResponse[entity.Advertisement], error) {
 	ageStart := 1
 	ageEnd := 100
 	gender := enum.Gender(`B`)
@@ -54,17 +54,17 @@ func (s *adsService) CreateAdvertisement(req data.CreateAdsReq) (data.GenericRes
 	}
 
 	if err := s.repo.Create(&ad); err != nil {
-		return data.GenericResponse[entity.Advertisement]{}, err
+		return data.IResponse[entity.Advertisement]{}, err
 	}
 
-	return data.GenericResponse[entity.Advertisement]{
+	return data.IResponse[entity.Advertisement]{
 		Status:  "success",
 		Message: "Ad create successfully",
 		Result:  ad,
 	}, nil
 }
 
-func (s *adsService) GetAdvertisements(query data.GetAdsReq) (data.GenericResponse[data.GetAdsResp], error) {
+func (s *adsService) GetAdvertisements(query data.GetAdsReq) (data.IResponse[data.GetAdsResp], error) {
 	limit := 5
 	offset := 0
 	if query.Limit != nil {
@@ -85,7 +85,7 @@ func (s *adsService) GetAdvertisements(query data.GetAdsReq) (data.GenericRespon
 
 	results, err := s.repo.FindByCondition(filters, limit, offset)
 	if err != nil {
-		return data.GenericResponse[data.GetAdsResp]{}, err
+		return data.IResponse[data.GetAdsResp]{}, err
 	}
 
 	responseData := utils.SliceConvertor(results, func(result entity.Advertisement) data.GetAdsRespItem {
@@ -95,7 +95,7 @@ func (s *adsService) GetAdvertisements(query data.GetAdsReq) (data.GenericRespon
 		}
 	})
 
-	return data.GenericResponse[data.GetAdsResp]{
+	return data.IResponse[data.GetAdsResp]{
 		Status:  "success",
 		Message: "Ads fetched successfully",
 		Result:  data.GetAdsResp{Ads: responseData},

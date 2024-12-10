@@ -1,5 +1,5 @@
 package data
 
-type ReqInterface interface {
+type IRequest interface {
 	Validate() (bool, error)
 }
