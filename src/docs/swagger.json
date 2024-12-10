@@ -24,14 +24,14 @@
                     },
                     {
                       "enum": [
-                        "CN",
+                        "CA",
                         "US",
                         "JP",
                         "TW"
                       ],
                         "type": "string",
                       "x-enum-varnames": [
-                        "CN",
+                        "CA",
                         "US",
                         "JP",
                         "TW"
@@ -87,7 +87,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                          "$ref": "#/definitions/data.GenericResponse-data_GetAdsResp"
+                          "$ref": "#/definitions/data.IResponse-data_GetAdsResp"
                         }
                     },
                     "400": {
@@ -115,7 +115,7 @@
                     "200": {
                       "description": "OK",
                       "schema": {
-                        "$ref": "#/definitions/data.GenericResponse-entity_Advertisement"
+                        "$ref": "#/definitions/data.IResponse-entity_Advertisement"
                       }
                     },
                     "400": {
@@ -186,7 +186,29 @@
           }
         }
       },
-      "data.GenericResponse-data_GetAdsResp": {
+      "data.GetAdsResp": {
+        "type": "object",
+        "properties": {
+          "ads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/data.GetAdsRespItem"
+            }
+          }
+        }
+      },
+      "data.GetAdsRespItem": {
+        "type": "object",
+        "properties": {
+          "EndAt": {
+            "type": "string"
+          },
+          "Title": {
+            "type": "string"
+          }
+        }
+      },
+      "data.IResponse-data_GetAdsResp": {
         "type": "object",
         "properties": {
           "message": {
@@ -200,7 +222,7 @@
           }
         }
       },
-      "data.GenericResponse-entity_Advertisement": {
+      "data.IResponse-entity_Advertisement": {
         "type": "object",
         "properties": {
           "message": {
@@ -210,28 +232,6 @@
             "$ref": "#/definitions/entity.Advertisement"
           },
           "status": {
-            "type": "string"
-                }
-            }
-        },
-      "data.GetAdsResp": {
-        "type": "object",
-        "properties": {
-          "ads": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/data.GetAdsRespItem"
-            }
-          }
-        }
-      },
-      "data.GetAdsRespItem": {
-            "type": "object",
-            "properties": {
-                "EndAt": {
-                    "type": "string"
-                },
-                "Title": {
                     "type": "string"
                 }
             }
@@ -302,13 +302,13 @@
       "enum.CountryCode": {
         "type": "string",
         "enum": [
-          "CN",
+          "CA",
           "US",
           "JP",
           "TW"
         ],
         "x-enum-varnames": [
-          "CN",
+          "CA",
           "US",
           "JP",
           "TW"

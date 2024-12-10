@@ -43,24 +43,6 @@ definitions:
       - startAt
       - title
     type: object
-  data.GenericResponse-data_GetAdsResp:
-    properties:
-      message:
-        type: string
-      result:
-        $ref: '#/definitions/data.GetAdsResp'
-      status:
-        type: string
-    type: object
-  data.GenericResponse-entity_Advertisement:
-    properties:
-      message:
-        type: string
-      result:
-        $ref: '#/definitions/entity.Advertisement'
-      status:
-        type: string
-    type: object
   data.GetAdsResp:
     properties:
       ads:
@@ -73,6 +55,24 @@ definitions:
       EndAt:
         type: string
       Title:
+        type: string
+    type: object
+  data.IResponse-data_GetAdsResp:
+    properties:
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/data.GetAdsResp'
+      status:
+        type: string
+    type: object
+  data.IResponse-entity_Advertisement:
+    properties:
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/entity.Advertisement'
+      status:
         type: string
     type: object
   entity.Advertisement:
@@ -118,13 +118,13 @@ definitions:
     type: object
   enum.CountryCode:
     enum:
-      - CN
+      - CA
       - US
       - JP
       - TW
     type: string
     x-enum-varnames:
-      - CN
+      - CA
       - US
       - JP
       - TW
@@ -164,7 +164,7 @@ paths:
         name: age
         type: integer
       - enum:
-          - CN
+          - CA
           - US
           - JP
           - TW
@@ -172,7 +172,7 @@ paths:
         name: country
         type: string
         x-enum-varnames:
-          - CN
+          - CA
           - US
           - JP
           - TW
@@ -211,7 +211,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/data.GenericResponse-data_GetAdsResp'
+            $ref: '#/definitions/data.IResponse-data_GetAdsResp'
         "400":
           description: Bad Request
       tags:
@@ -230,7 +230,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/data.GenericResponse-entity_Advertisement'
+            $ref: '#/definitions/data.IResponse-entity_Advertisement'
         "400":
           description: Bad Request
       tags:

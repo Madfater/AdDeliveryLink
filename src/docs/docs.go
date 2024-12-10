@@ -31,14 +31,14 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "CN",
+                            "CA",
                             "US",
                             "JP",
                             "TW"
                         ],
                         "type": "string",
                         "x-enum-varnames": [
-                            "CN",
+                            "CA",
                             "US",
                             "JP",
                             "TW"
@@ -94,7 +94,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.GenericResponse-data_GetAdsResp"
+                            "$ref": "#/definitions/data.IResponse-data_GetAdsResp"
                         }
                     },
                     "400": {
@@ -122,7 +122,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.GenericResponse-entity_Advertisement"
+                            "$ref": "#/definitions/data.IResponse-entity_Advertisement"
                         }
                     },
                     "400": {
@@ -193,34 +193,6 @@ const docTemplate = `{
                 }
             }
         },
-        "data.GenericResponse-data_GetAdsResp": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/data.GetAdsResp"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "data.GenericResponse-entity_Advertisement": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/entity.Advertisement"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
         "data.GetAdsResp": {
             "type": "object",
             "properties": {
@@ -239,6 +211,34 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "Title": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.IResponse-data_GetAdsResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/data.GetAdsResp"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.IResponse-entity_Advertisement": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/entity.Advertisement"
+                },
+                "status": {
                     "type": "string"
                 }
             }
@@ -309,13 +309,13 @@ const docTemplate = `{
         "enum.CountryCode": {
             "type": "string",
             "enum": [
-                "CN",
+                "CA",
                 "US",
                 "JP",
                 "TW"
             ],
             "x-enum-varnames": [
-                "CN",
+                "CA",
                 "US",
                 "JP",
                 "TW"
