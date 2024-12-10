@@ -34,6 +34,8 @@ func main() {
 	r.Use(gin.LoggerWithWriter(io.MultiWriter(f)))
 
 	logger := log.GetLogger()
+	r.Use(middleware.CustomRecovery())
+	middleware.RegisterCustomValidation()
 
 	appCtx, err := models.CreateAppContext("mysql", "redis")
 	utils.HandleError(err, "Fail to create application context")
@@ -59,26 +61,5 @@ func main() {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	err = r.Run(":8080")
-	utils.HandleError(err, "Fail to run server")
-}
-
-func CustomRecovery() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		defer func() {
-			if err := recover(); err != nil {
-				logger := log.GetLogger()
-				logger.Error("Panic Happened", map[string]interface{}{
-					"method":     c.Request.Method,
-					"path":       c.Request.URL.Path,
-					"user_agent": c.Request.UserAgent(),
-					"err":        err,
-				})
-				c.JSON(http.StatusInternalServerError, gin.H{
-					"error": "Internal Server Error",
-				})
-				c.Abort()
-			}
-		}()
-		c.Next()
-	}
+	log.HandleError(err, "Fail to run server")
 }
