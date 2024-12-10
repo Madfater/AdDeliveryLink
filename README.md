@@ -39,22 +39,31 @@
 
 ## 使用方式
 
-- **_POST /ad_** 上架廣告
-    - conditions
-        - gender：Optional ， F、M、B。分別為男、女、全部。預設值將為 B
-        - age：Optional ，使用 AgeStart、AgeEnd 區分年齡段。預設值分別為 1 以及 100
-        - platform: required ，enum array ， enum: ios、android、web
-        - country: required ，enum array ， enum: JP、TW、CA、US
-    - endAt: required ，廣告的過期時間，格式為 2021-01-01T00:00:00Z
-    - StartAt: required ，廣告的開始投放時間，格式為 2021-01-01T00:00:00Z
-    - title: required ，廣告名稱
+### **_POST /ad_** - 上架廣告
+
+#### **Request Body**
+
+上架廣告時，需要提供以下參數：
+
+| 參數           | 類型            | 必填       | 說明                                                |
+|--------------|---------------|----------|---------------------------------------------------|
+| conditions   | Object        | Optional | 條件對象，包括 `gender`、`age`、`platform` 和 `country`。    |
+| ├── gender   | String        | Optional | 性別篩選，可選值為 `F`（女性）、`M`（男性）、`B`（全部），預設值為 `B`。       |
+| ├── ageStart | Number        | Optional | 起始年齡，預設值為 `1`。                                    |
+| ├── ageEnd   | Number        | Optional | 結束年齡，預設值為 `100`。                                  |
+| ├── platform | Array[String] | Required | 平台篩選，枚舉值為 `ios`、`android`、`web`。                  |
+| ├── country  | Array[String] | Required | 國家篩選，枚舉值為 `JP`、`TW`、`CA`、`US`。                    |
+| endAt        | String        | Required | 廣告的過期時間，ISO 8601 格式（例如：`2021-01-01T00:00:00Z`）。   |
+| startAt      | String        | Required | 廣告的開始投放時間，ISO 8601 格式（例如：`2021-01-01T00:00:00Z`）。 |
+| title        | String        | Required | 廣告名稱。                                             |
+
+#### **Request Example**
 
 ```json
-//body
 {
   "conditions": {
     "ageEnd": 100,
-    "ageStart": 100,
+    "ageStart": 1,
     "country": [
       "CA"
     ],
@@ -65,17 +74,34 @@
   },
   "endAt": "2021-01-01T00:00:00Z",
   "startAt": "2021-01-01T00:00:00Z",
-  "title": "string"
+  "title": "Sample Advertisement"
 }
 ```
 
-- **_Get /ad_** 取得廣告
-  - 除了 offset 以及 limit 皆為 optional
+--- 
 
+### **GET /ad** - 取得廣告
+
+#### **Query Parameters**
+
+所有參數均為選填，若無指定條件，將返回所有廣告。
+
+| 參數       | 類型     | 必填       | 說明                             |
+|----------|--------|----------|--------------------------------|
+| age      | Number | Optional | 指定年齡範圍，例如 `age=25`。            |
+| country  | String | Optional | 篩選廣告的國家，例如 `country=CA`。       |
+| gender   | String | Optional | 篩選廣告的性別，例如 `gender=M`。         |
+| platform | String | Optional | 篩選廣告的平台，例如 `platform=android`。 |
+| limit    | Number | Optional | 返回的廣告數量上限。預設為 5                |
+| offset   | Number | Optional | 起始的偏移數，用於分頁。預設為 0              |
+
+### **Request Example**
+
+```http
+GET /ad?age=25&country=CA&gender=M&limit=10&offset=0&platform=android
 ```
-//query
-/ad?age=?&country=?&gender=?&limit=?&offset=?&platform=?
-```
+
+--- 
 
 ## 資料庫設計
 
@@ -109,8 +135,9 @@ erDiagram
 - platform 和 country_code 是多對多的使用情境，當初為了擴充性選擇這樣設計。如果真的只有一個屬性可以考慮改為一個 table
   存 ad id 以及 string 在程式上對能儲存的值進行限制，這樣在效能以及難度都會比較簡單。
 - 雖然目前還沒有這些功能，但考慮到修改的樂觀鎖或權限管理還是儲存了 updated_date 和 created_date。
-- status 是作為廣告過期的指標，第一是為了讓定期腳本進行清除，第二是為了搜尋時過濾過期的廣告加速搜尋速度。
-- 設計一個複合索引 (gender,status,age_start,age_end,start_at,end_at)，想法是會搜尋的條件中出現頻率越高且內容越複雜的放越前面，範圍搜尋放最後面。
+- status 是作為廣告過期的指標，第一是為了讓定期腳本進行清除，第二是為了搜尋時方片過濾過期的廣告。
+- 設計一個複合索引 (gender,status,age_start,age_end,start_at,end_at)。根據 leftmost prefix rule 設計的複合索引，越左邊的
+  column 需要越常出現且越複雜，且順序為查詢<-排序<-範圍。
 
 ## 技術選擇
 
