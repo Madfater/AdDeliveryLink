@@ -29,7 +29,9 @@ func main() {
 	middleware.RegisterCustomValidation()
 
 	appCtx, err := models.CreateAppContext("mysql", "redis")
-	log.HandleError(err, "Fail to create application context")
+	if err != nil {
+		log.HandleError(err, "Fail to create application context")
+	}
 	defer appCtx.Close()
 
 	//依賴注入
@@ -50,5 +52,7 @@ func main() {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	err = r.Run(":8080")
-	log.HandleError(err, "Fail to run server")
+	if err != nil {
+		log.HandleError(err, "Fail to run server")
+	}
 }

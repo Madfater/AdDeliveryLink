@@ -12,7 +12,9 @@ import (
 func RegisterCustomValidation() {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		err := v.RegisterValidation("enum", enumValidation)
-		log.HandleError(err, "validator register failed")
+		if err != nil {
+			log.HandleError(err, "validator register failed")
+		}
 	}
 }
 
