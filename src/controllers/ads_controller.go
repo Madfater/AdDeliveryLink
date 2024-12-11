@@ -32,14 +32,6 @@ func (ctrl *AdsController) CreateAdvertisement(c *gin.Context) {
 		return
 	}
 
-	logger := log.GetLogger()
-	logger.Info("Request processed", map[string]interface{}{
-		"method":       c.Request.Method,
-		"path":         c.Request.URL.Path,
-		"user_agent":   c.Request.UserAgent(),
-		"request_body": body,
-	})
-
 	response, err := ctrl.service.CreateAdvertisement(body)
 	if err != nil {
 		log.ErrorResponse(c, http.StatusInternalServerError, "Failed to create advertisement", err)
@@ -63,14 +55,6 @@ func (ctrl *AdsController) GetAdvertisement(c *gin.Context) {
 		log.ErrorResponse(c, http.StatusBadRequest, "Invalid query parameters", err)
 		return
 	}
-
-	logger := log.GetLogger()
-	logger.Info("Request processed", map[string]interface{}{
-		"method":        c.Request.Method,
-		"path":          c.Request.URL.Path,
-		"user_agent":    c.Request.UserAgent(),
-		"request_query": query,
-	})
 
 	result, err := ctrl.service.GetAdvertisements(query)
 	if err != nil {

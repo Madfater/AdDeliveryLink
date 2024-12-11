@@ -26,6 +26,7 @@ func main() {
 
 	//設定 middleware
 	r.Use(middleware.CustomRecovery())
+	r.Use(middleware.RequestLogger())
 	middleware.RegisterCustomValidation()
 
 	appCtx, err := models.CreateAppContext("mysql", "redis")
