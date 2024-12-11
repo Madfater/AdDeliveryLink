@@ -16,27 +16,22 @@ func NewValidator[T data.IRequest](requestType T) *RequestValidator[T] {
 	return &RequestValidator[T]{requestType: requestType}
 }
 
-func (v *RequestValidator[T]) GetBodyValidator(c *gin.Context) {
-	if err := c.ShouldBindBodyWith(&v.requestType, binding.JSON); err != nil {
-		log.ErrorResponse(c, http.StatusBadRequest, "Invalid request body", err)
-		c.Abort()
-		return
+func (v *RequestValidator[T]) GetValidator(c *gin.Context) {
+	switch c.Request.Method {
+	case http.MethodGet:
+		if err := c.ShouldBindQuery(&v.requestType); err != nil {
+			log.ErrorResponse(c, http.StatusBadRequest, "Invalid query parameters", err)
+			c.Abort()
+			return
+		}
+	default:
+		if err := c.ShouldBindBodyWith(&v.requestType, binding.JSON); err != nil {
+			log.ErrorResponse(c, http.StatusBadRequest, "Invalid request body", err)
+			c.Abort()
+			return
+		}
 	}
 
-	v.validate(c)
-}
-
-func (v *RequestValidator[T]) GetQueryValidator(c *gin.Context) {
-	if err := c.ShouldBindQuery(&v.requestType); err != nil {
-		log.ErrorResponse(c, http.StatusBadRequest, "Invalid query parameters", err)
-		c.Abort()
-		return
-	}
-
-	v.validate(c)
-}
-
-func (v *RequestValidator[T]) validate(c *gin.Context) {
 	if isValid, err := v.requestType.Validate(); err != nil && !isValid {
 		log.ErrorResponse(c, http.StatusBadRequest, "Invalid content", err)
 		c.Abort()

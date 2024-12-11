@@ -44,9 +44,9 @@ func main() {
 
 	route := r.Group("/v1/api")
 	{
-		route.POST("/ad", middleware.NewValidator(data.CreateAdsReq{}).GetBodyValidator, adsController.CreateAdvertisement)
+		route.POST("/ad", middleware.NewValidator(data.CreateAdsReq{}).GetValidator, adsController.CreateAdvertisement)
 
-		route.GET("/ad", middleware.NewValidator(data.GetAdsReq{}).GetQueryValidator, adsController.GetAdvertisement)
+		route.GET("/ad", middleware.NewValidator(data.GetAdsReq{}).GetValidator, adsController.GetAdvertisement)
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
