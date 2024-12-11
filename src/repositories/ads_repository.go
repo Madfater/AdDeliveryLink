@@ -3,6 +3,7 @@ package repositories
 import (
 	"github.com/Madfater/AdDeliveryLink/dto"
 	"github.com/Madfater/AdDeliveryLink/entity"
+	"github.com/Madfater/AdDeliveryLink/enum"
 	"gorm.io/gorm"
 )
 
@@ -25,28 +26,30 @@ func (r *adsRepository) FindByCondition(filter dto.Filter, limit, offset int) ([
 	var results []entity.Advertisement
 
 	query := r.db.Model(&entity.Advertisement{}).
-		Select("DISTINCT advertisement.Title", "advertisement.end_at").
-		Joins("left join advertisement_country on advertisement.ID = advertisement_country.advertisement_id").
-		Joins("left join advertisement_platform on advertisement.ID = advertisement_platform.advertisement_id")
+		Distinct("advertisement.title", "advertisement.end_at").
+		Preload("Country").
+		Preload("Platform").
+		Joins("INNER JOIN advertisement_country ON advertisement.id = advertisement_country.advertisement_id").
+		Joins("INNER JOIN advertisement_platform ON advertisement.id = advertisement_platform.advertisement_id")
 
 	query.Where("advertisement.status = ?", true)
 
 	gender := filter.Gender
-	query.Where(r.db.Where("advertisement.Gender = ?", gender).Or("advertisement.Gender = B"))
+	query.Where("advertisement.gender IN (?,?)", gender, enum.Gender("B"))
 
 	if platform := filter.Platform; platform != "" {
-		query.Where(r.db.Where("advertisement_platform.platform_name = ?", platform))
+		query.Where("advertisement_platform.platform_name = ?", platform)
 	}
 
 	if country := filter.Country; country != "" {
-		query.Where(r.db.Where("advertisement_country.country_code = ?", country))
+		query.Where("advertisement_country.country_code = ?", country)
 	}
 
 	if age := filter.Age; age != nil {
-		query.Where("advertisement.age_start <= ? AND advertisement.age_end >= ?", age, age)
+		query.Where("? BETWEEN advertisement.age_start AND advertisement.age_end", age)
 	}
 
-	query.Where("advertisement.start_at <= ? AND advertisement.end_at >= ?", filter.Time, filter.Time)
+	query.Where("? BETWEEN advertisement.start_at AND advertisement.end_at", filter.Time)
 
 	err := query.Limit(limit).Offset(offset).Order("advertisement.end_at ASC").Find(&results).Error
 	return results, err
