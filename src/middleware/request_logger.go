@@ -47,5 +47,7 @@ func RequestLogger() gin.HandlerFunc {
 		logger.Info("Request start", info)
 
 		c.Next()
+
+		logger.Info("Request end", info)
 	}
 }
