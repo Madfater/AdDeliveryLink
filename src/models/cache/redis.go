@@ -54,7 +54,7 @@ func (r *RedisCache) Store(ctx context.Context, key string, val *caches.Query[an
 		return err
 	}
 
-	r.rdb.Set(ctx, key, res, 300*time.Second)
+	r.rdb.Set(ctx, key, res, 1*time.Hour)
 	return nil
 }
 
