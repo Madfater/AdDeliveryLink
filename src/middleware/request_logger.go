@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"github.com/Madfater/AdDeliveryLink/log"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"io"
 	"net/http"
 )
@@ -13,12 +14,14 @@ func RequestLogger() gin.HandlerFunc {
 		logger := log.GetLogger()
 
 		method := c.Request.Method
-		path := c.Request.URL.Path
-		agent := c.Request.UserAgent()
+		requestId := uuid.New().String()
+		c.Set("requestId", requestId)
+
 		info := map[string]interface{}{
+			"request_id": requestId,
 			"method":     method,
-			"path":       path,
-			"user_agent": agent,
+			"path":       c.Request.URL.Path,
+			"user_agent": c.Request.UserAgent(),
 		}
 
 		switch method {

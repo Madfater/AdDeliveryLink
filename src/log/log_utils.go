@@ -9,7 +9,9 @@ import (
 
 func SuccessResponse[T any](c *gin.Context, data data.IResponse[T]) {
 	logger := GetLogger()
+	requestId, _ := c.Get("requestId")
 	logger.Info("Request Finished", map[string]interface{}{
+		"request_id": requestId,
 		"method":     c.Request.Method,
 		"path":       c.Request.URL.Path,
 		"user_agent": c.Request.UserAgent(),
@@ -20,7 +22,9 @@ func SuccessResponse[T any](c *gin.Context, data data.IResponse[T]) {
 
 func ErrorResponse(c *gin.Context, httpStatus int, message string, err error) {
 	logger := GetLogger()
+	requestId, _ := c.Get("requestId")
 	logger.Error("Request Failed", map[string]interface{}{
+		"request_id": requestId,
 		"method":     c.Request.Method,
 		"path":       c.Request.URL.Path,
 		"user_agent": c.Request.UserAgent(),
