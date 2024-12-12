@@ -4,7 +4,6 @@ import (
 	"github.com/Madfater/AdDeliveryLink/models/cache"
 	"github.com/Madfater/AdDeliveryLink/models/database"
 	"gorm.io/gorm"
-	"log"
 )
 
 type AppContext struct {
@@ -38,13 +37,14 @@ func CreateAppContext(dbType, cacheType string) (*AppContext, error) {
 	return &AppContext{DB: gormDB}, nil
 }
 
-func (ctx *AppContext) Close() {
+func (ctx *AppContext) Close() error {
 	db, err := ctx.DB.DB()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	err = db.Close()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }

@@ -33,7 +33,10 @@ func main() {
 	if err != nil {
 		log.HandleError(err, "Fail to create application context")
 	}
-	defer appCtx.Close()
+	defer func(appCtx *models.AppContext) {
+		err := appCtx.Close()
+		log.HandleError(err, "Fail to close application context")
+	}(appCtx)
 
 	//依賴注入
 	adsRepo := repositories.NewAdsRepository(appCtx.DB)
