@@ -7,6 +7,7 @@ toolchain go1.23.3
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-gorm/caches/v4 v4.0.5
+	github.com/google/uuid v1.6.0
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/swaggo/files v1.0.1
@@ -14,6 +15,7 @@ require (
 	github.com/swaggo/swag v1.16.4
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gorm.io/driver/mysql v1.5.7
+	gorm.io/driver/sqlite v1.5.7
 	gorm.io/gorm v1.25.12
 )
 
@@ -29,9 +31,9 @@ require (
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
 	github.com/go-openapi/spec v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	golang.org/x/tools v0.27.0 // indirect

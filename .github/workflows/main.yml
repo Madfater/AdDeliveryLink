@@ -35,7 +35,7 @@ jobs:
         working-directory: ./src
 
       - name: Run tests
-        run: go test -v ./tests/...
+        run: CGO_ENABLED=1 go test -v ./tests/...
         working-directory: ./src
   build-app:
     needs: 
