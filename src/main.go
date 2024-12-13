@@ -51,6 +51,11 @@ func main() {
 		route.POST("/ad", middleware.NewValidator(data.CreateAdsReq{}).GetValidator, adsController.CreateAdvertisement)
 
 		route.GET("/ad", middleware.NewValidator(data.GetAdsReq{}).GetValidator, adsController.GetAdvertisement)
+
+		taskRoute := route.Group("/task")
+		{
+			taskRoute.POST("/expire", adsController.ExpireAdvertisements)
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))

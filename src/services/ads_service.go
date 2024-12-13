@@ -13,6 +13,7 @@ import (
 type AdsService interface {
 	CreateAdvertisement(req data.CreateAdsReq) (data.IResponse[entity.Advertisement], error)
 	GetAdvertisements(query data.GetAdsReq) (data.IResponse[data.GetAdsResp], error)
+	ExpireAdvertisements() (data.IResponse[interface{}], error)
 }
 
 type adsService struct {
@@ -100,4 +101,12 @@ func (s *adsService) GetAdvertisements(query data.GetAdsReq) (data.IResponse[dat
 		Message: "Ads fetched successfully",
 		Result:  data.GetAdsResp{Ads: responseData},
 	}, nil
+}
+
+func (s *adsService) ExpireAdvertisements() (data.IResponse[interface{}], error) {
+	err := s.repo.ExpireAdvertisements()
+	return data.IResponse[interface{}]{
+		Status:  "success",
+		Message: "Ads expired successfully",
+	}, err
 }

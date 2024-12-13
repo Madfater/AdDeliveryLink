@@ -64,3 +64,19 @@ func (ctrl *AdsController) GetAdvertisement(c *gin.Context) {
 
 	log.SuccessResponse(c, result)
 }
+
+// ExpireAdvertisements @Summary For corn to expire ads
+// @Description Set "status" the ads column to false when it expires.
+// @Tags Task
+// @Success 200
+// @Failure 400
+// @Router /task/expire [post]
+func (ctrl *AdsController) ExpireAdvertisements(c *gin.Context) {
+	result, err := ctrl.service.ExpireAdvertisements()
+	if err != nil {
+		log.ErrorResponse(c, http.StatusInternalServerError, "Failed to expire advertisements", err)
+		return
+	}
+
+	log.SuccessResponse(c, result)
+}

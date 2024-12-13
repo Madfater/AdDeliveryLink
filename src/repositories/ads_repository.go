@@ -5,11 +5,13 @@ import (
 	"github.com/Madfater/AdDeliveryLink/entity"
 	"github.com/Madfater/AdDeliveryLink/enum"
 	"gorm.io/gorm"
+	"time"
 )
 
 type AdsRepository interface {
 	RepositoryInterface[entity.Advertisement]
 	FindByCondition(filter dto.Filter, limit, offset int) ([]entity.Advertisement, error)
+	ExpireAdvertisements() error
 }
 
 type adsRepository struct {
@@ -53,4 +55,10 @@ func (r *adsRepository) FindByCondition(filter dto.Filter, limit, offset int) ([
 
 	err := query.Limit(limit).Offset(offset).Order("advertisement.end_at ASC").Find(&results).Error
 	return results, err
+}
+
+func (r *adsRepository) ExpireAdvertisements() error {
+	currentTime := time.Now().Truncate(time.Hour)
+	err := r.db.Model(&entity.Advertisement{}).Where("end_at < ?", currentTime).Update("status", false).Error
+	return err
 }

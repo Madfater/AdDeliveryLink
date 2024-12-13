@@ -130,6 +130,22 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/task/expire": {
+            "post": {
+                "description": "Set \"status\" the ads column to false when it expires.",
+                "tags": [
+                    "Task"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
         }
     },
     "definitions": {

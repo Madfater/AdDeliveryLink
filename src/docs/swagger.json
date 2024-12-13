@@ -23,36 +23,36 @@
                         "in": "query"
                     },
                     {
-                      "enum": [
-                        "CA",
-                        "US",
-                        "JP",
-                        "TW"
-                      ],
+                        "enum": [
+                            "CA",
+                            "US",
+                            "JP",
+                            "TW"
+                        ],
                         "type": "string",
-                      "x-enum-varnames": [
-                        "CA",
-                        "US",
-                        "JP",
-                        "TW"
-                      ],
+                        "x-enum-varnames": [
+                            "CA",
+                            "US",
+                            "JP",
+                            "TW"
+                        ],
                         "name": "country",
-                      "in": "query"
+                        "in": "query"
                     },
                     {
                         "enum": [
-                          "M",
+                            "M",
                             "F",
-                          "B"
+                            "B"
                         ],
                         "type": "string",
-                      "x-enum-varnames": [
-                        "Male",
-                        "Female",
-                        "Both"
-                      ],
+                        "x-enum-varnames": [
+                            "Male",
+                            "Female",
+                            "Both"
+                        ],
                         "name": "gender",
-                      "in": "query"
+                        "in": "query"
                     },
                     {
                         "maximum": 100,
@@ -69,25 +69,25 @@
                     },
                     {
                         "enum": [
-                          "android",
+                            "android",
                             "ios",
                             "web"
                         ],
                         "type": "string",
-                      "x-enum-varnames": [
-                        "Android",
-                        "IOS",
-                        "Web"
-                      ],
+                        "x-enum-varnames": [
+                            "Android",
+                            "IOS",
+                            "Web"
+                        ],
                         "name": "platform",
-                      "in": "query"
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                          "$ref": "#/definitions/data.IResponse-data_GetAdsResp"
+                            "$ref": "#/definitions/data.IResponse-data_GetAdsResp"
                         }
                     },
                     "400": {
@@ -107,16 +107,32 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                          "$ref": "#/definitions/data.CreateAdsReq"
+                            "$ref": "#/definitions/data.CreateAdsReq"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                      "description": "OK",
-                      "schema": {
-                        "$ref": "#/definitions/data.IResponse-entity_Advertisement"
-                      }
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/data.IResponse-entity_Advertisement"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/task/expire": {
+            "post": {
+                "description": "Set \"status\" the ads column to false when it expires.",
+                "tags": [
+                    "Task"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     },
                     "400": {
                         "description": "Bad Request"
@@ -126,12 +142,12 @@
         }
     },
     "definitions": {
-      "data.AdsConditions": {
+        "data.AdsConditions": {
             "type": "object",
             "required": [
-              "country",
-              "gender",
-              "platform"
+                "country",
+                "gender",
+                "platform"
             ],
             "properties": {
                 "ageEnd": {
@@ -147,198 +163,198 @@
                 "country": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/definitions/enum.CountryCode"
+                        "$ref": "#/definitions/enum.CountryCode"
                     }
                 },
                 "gender": {
-                  "$ref": "#/definitions/enum.Gender"
+                    "$ref": "#/definitions/enum.Gender"
                 },
                 "platform": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/definitions/enum.Platform"
+                        "$ref": "#/definitions/enum.Platform"
                     }
                 }
             }
-      },
-      "data.CreateAdsReq": {
-        "type": "object",
-        "required": [
-          "conditions",
-          "endAt",
-          "startAt",
-          "title"
-        ],
-        "properties": {
-          "conditions": {
-            "$ref": "#/definitions/data.AdsConditions"
-          },
-          "endAt": {
-            "type": "string",
-            "example": "2021-01-01T00:00:00Z"
-          },
-          "startAt": {
-            "type": "string",
-            "example": "2021-01-01T00:00:00Z"
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "data.GetAdsResp": {
-        "type": "object",
-        "properties": {
-          "ads": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/data.GetAdsRespItem"
-            }
-          }
-        }
-      },
-      "data.GetAdsRespItem": {
-        "type": "object",
-        "properties": {
-          "EndAt": {
-            "type": "string"
-          },
-          "Title": {
-            "type": "string"
-          }
-        }
-      },
-      "data.IResponse-data_GetAdsResp": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          },
-          "result": {
-            "$ref": "#/definitions/data.GetAdsResp"
-          },
-          "status": {
-            "type": "string"
-          }
-        }
-      },
-      "data.IResponse-entity_Advertisement": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          },
-          "result": {
-            "$ref": "#/definitions/entity.Advertisement"
-          },
-          "status": {
+        },
+        "data.CreateAdsReq": {
+            "type": "object",
+            "required": [
+                "conditions",
+                "endAt",
+                "startAt",
+                "title"
+            ],
+            "properties": {
+                "conditions": {
+                    "$ref": "#/definitions/data.AdsConditions"
+                },
+                "endAt": {
+                    "type": "string",
+                    "example": "2021-01-01T00:00:00Z"
+                },
+                "startAt": {
+                    "type": "string",
+                    "example": "2021-01-01T00:00:00Z"
+                },
+                "title": {
                     "type": "string"
                 }
             }
-      },
-      "entity.Advertisement": {
-        "type": "object",
-        "properties": {
-          "ageEnd": {
-            "type": "integer"
-          },
-          "ageStart": {
-            "type": "integer"
-          },
-          "country": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/entity.Country"
+        },
+        "data.GetAdsResp": {
+            "type": "object",
+            "properties": {
+                "ads": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/data.GetAdsRespItem"
+                    }
+                }
             }
-          },
-          "createdDate": {
-            "type": "string"
-          },
-          "endAt": {
-            "type": "string"
-          },
-          "gender": {
-            "$ref": "#/definitions/enum.Gender"
-          },
-          "id": {
-            "type": "integer"
-          },
-          "platform": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/entity.Platform"
+        },
+        "data.GetAdsRespItem": {
+            "type": "object",
+            "properties": {
+                "EndAt": {
+                    "type": "string"
+                },
+                "Title": {
+                    "type": "string"
+                }
             }
-          },
-          "startAt": {
-            "type": "string"
-          },
-          "status": {
-            "type": "boolean"
-          },
-          "title": {
-            "type": "string"
-          },
-          "updatedDate": {
-            "type": "string"
-          }
-        }
-      },
-      "entity.Country": {
-        "type": "object",
-        "properties": {
-          "countryCode": {
-            "$ref": "#/definitions/enum.CountryCode"
-          }
-        }
-      },
-      "entity.Platform": {
-        "type": "object",
-        "properties": {
-          "platformName": {
-            "$ref": "#/definitions/enum.Platform"
-          }
-        }
-      },
-      "enum.CountryCode": {
-        "type": "string",
-        "enum": [
-          "CA",
-          "US",
-          "JP",
-          "TW"
-        ],
-        "x-enum-varnames": [
-          "CA",
-          "US",
-          "JP",
-          "TW"
-        ]
-      },
-      "enum.Gender": {
-        "type": "string",
-        "enum": [
-          "M",
-          "F",
-          "B"
-        ],
-        "x-enum-varnames": [
-          "Male",
-          "Female",
-          "Both"
-        ]
-      },
-      "enum.Platform": {
-        "type": "string",
-        "enum": [
-          "android",
-          "ios",
-          "web"
-        ],
-        "x-enum-varnames": [
-          "Android",
-          "IOS",
-          "Web"
-        ]
+        },
+        "data.IResponse-data_GetAdsResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/data.GetAdsResp"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.IResponse-entity_Advertisement": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/entity.Advertisement"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.Advertisement": {
+            "type": "object",
+            "properties": {
+                "ageEnd": {
+                    "type": "integer"
+                },
+                "ageStart": {
+                    "type": "integer"
+                },
+                "country": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Country"
+                    }
+                },
+                "createdDate": {
+                    "type": "string"
+                },
+                "endAt": {
+                    "type": "string"
+                },
+                "gender": {
+                    "$ref": "#/definitions/enum.Gender"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "platform": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Platform"
+                    }
+                },
+                "startAt": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedDate": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.Country": {
+            "type": "object",
+            "properties": {
+                "countryCode": {
+                    "$ref": "#/definitions/enum.CountryCode"
+                }
+            }
+        },
+        "entity.Platform": {
+            "type": "object",
+            "properties": {
+                "platformName": {
+                    "$ref": "#/definitions/enum.Platform"
+                }
+            }
+        },
+        "enum.CountryCode": {
+            "type": "string",
+            "enum": [
+                "CA",
+                "US",
+                "JP",
+                "TW"
+            ],
+            "x-enum-varnames": [
+                "CA",
+                "US",
+                "JP",
+                "TW"
+            ]
+        },
+        "enum.Gender": {
+            "type": "string",
+            "enum": [
+                "M",
+                "F",
+                "B"
+            ],
+            "x-enum-varnames": [
+                "Male",
+                "Female",
+                "Both"
+            ]
+        },
+        "enum.Platform": {
+            "type": "string",
+            "enum": [
+                "android",
+                "ios",
+                "web"
+            ],
+            "x-enum-varnames": [
+                "Android",
+                "IOS",
+                "Web"
+            ]
         }
     }
 }
