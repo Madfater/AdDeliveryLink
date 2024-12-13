@@ -10,13 +10,15 @@ import (
 )
 
 type GormLogger struct {
-	logLevel logger.LogLevel
+	logLevel      logger.LogLevel
+	slowThreshold time.Duration // Threshold for slow queries
 }
 
 // NewGormLogger 創建新的 GORM Logger
-func NewGormLogger(logLevel logger.LogLevel) *GormLogger {
+func NewGormLogger(logLevel logger.LogLevel, slowThreshold time.Duration) *GormLogger {
 	return &GormLogger{
-		logLevel: logLevel,
+		logLevel:      logLevel,
+		slowThreshold: slowThreshold,
 	}
 }
 
@@ -67,6 +69,11 @@ func (l *GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (stri
 	if err != nil {
 		fields["error"] = err
 		log.GetLogger().Error("SQL execution failed", fields)
+		return
+	}
+
+	if elapsed > l.slowThreshold {
+		log.GetLogger().Warn("Slow SQL detected", fields)
 		return
 	}
 
