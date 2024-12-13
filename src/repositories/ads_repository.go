@@ -35,7 +35,7 @@ func (r *adsRepository) FindByCondition(filter dto.Filter, limit, offset int) ([
 	query.Where("advertisement.status = ?", true)
 
 	gender := filter.Gender
-	query.Where("advertisement.gender IN (?,?)", gender, enum.Gender("B"))
+	query.Where("advertisement.gender IN (?,?)", gender, enum.Both)
 
 	if platform := filter.Platform; platform != "" {
 		query.Where("advertisement_platform.platform_name = ?", platform)
