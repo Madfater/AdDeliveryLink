@@ -20,7 +20,20 @@ services:
       - logstash
     restart: always
     volumes:
-      - logs:/root/logs
+      - app-logs:/root/logs
+
+  dagu:
+    image: "ghcr.io/dagu-org/dagu:latest"
+    container_name: dagu
+    hostname: dagu
+    ports:
+      - "6969:6969"
+    environment:
+      - DAGU_PORT=6969
+      - DAGU_TZ=Asia/Taipei
+    volumes:
+      - ./dagu:/config/dags
+      - dagu-logs:/config/logs
 
   db:
     build:
@@ -63,7 +76,7 @@ services:
       - elasticsearch
     volumes:
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - logs:/logs
+      - app-logs:/logs
     ports:
       - "9600:9600"
 
@@ -81,4 +94,5 @@ volumes:
   db-conf:
   db-logs:
   elasticsearch-data:
-  logs:
+  app-logs:
+  dagu-logs:

@@ -1,0 +1,6 @@
+schedule:
+  start: "0 8 * * *"    # starts at 8:00
+steps:
+  - name: expire
+    executor: http
+    command: POST http://app:8080/v1/api/task/expire
